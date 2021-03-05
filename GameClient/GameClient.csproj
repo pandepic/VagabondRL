@@ -1,0 +1,45 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AssemblyName>7DRL2021</AssemblyName>
+    <PublishReadyToRun>false</PublishReadyToRun>
+    <TieredCompilation>false</TieredCompilation>
+
+    <BeautyLibsDir>Libraries</BeautyLibsDir>
+    <DisableBeauty>False</DisableBeauty>
+    <ForceBeauty>False</ForceBeauty>
+    <DisablePatch>False</DisablePatch>
+    <BeautyLogLevel>Error</BeautyLogLevel>
+    <BeautyExcludes>SDL2.dll</BeautyExcludes>
+    <RootNamespace>VagabondRL</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Mods\**\*.*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Mods\Base\Assets.xml" />
+    <None Remove="Mods\Mods.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\ElementEngine\ElementEngine.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Settings.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="nulastudio.NetCoreBeauty" Version="1.2.9" />
+  </ItemGroup>
+
+</Project>

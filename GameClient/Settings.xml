@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Settings>
+  <Section Name="Window">
+    <Setting Name="Width" Value="1600" />
+    <Setting Name="Height" Value="900" />
+  </Section>
+  <Section Name="Sound">
+    <Setting Name="MasterVolume" Value="0" />
+    <Setting Name="MusicVolume" Value="0.5" />
+    <Setting Name="SFXVolume" Value="0.5" />
+    <Setting Name="UIVolume" Value="0.5" />
+  </Section>
+  <Section Name="Controls">
+
+    <Setting Name="MoveUp" Value="W,Up,Keypad8" Type="Keyboard" />
+    <Setting Name="MoveDown" Value="S,Down,Keypad2" Type="Keyboard" />
+    <Setting Name="MoveLeft" Value="A,Left,Keypad4" Type="Keyboard" />
+    <Setting Name="MoveRight" Value="D,Right,Keypad6" Type="Keyboard" />
+
+    <Setting Name="MoveUpLeft" Value="Keypad7" Type="Keyboard" />
+    <Setting Name="MoveUpRight" Value="Keypad9" Type="Keyboard" />
+    <Setting Name="MoveDownLeft" Value="Keypad1" Type="Keyboard" />
+    <Setting Name="MoveDownRight" Value="Keypad3" Type="Keyboard" />
+    
+    <Setting Name="PassTurn" Value="Space" Type="Keyboard" />
+    <Setting Name="SaveGame" Value="LControl+S" Type="Keyboard" />
+    
+    <!--<Setting Name="ZoomIn" Value="WheelUp" Type="Mouse" />
+    <Setting Name="ZoomOut" Value="WheelDown" Type="Mouse" />-->
+  </Section>
+</Settings>
