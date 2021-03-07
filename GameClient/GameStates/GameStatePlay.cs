@@ -14,10 +14,15 @@ namespace VagabondRL
         public SpriteBatch2D SpriteBatch;
         public Camera2D Camera;
 
+        // AI
+        public AStarPathfinder Pathfinder;
+        public Entity Tilemap;
+
         // ECS
         public Registry Registry;
         public Group DrawableGroup;
         public Group MovementGroup;
+        public Group PathingGroup;
 
         // Entities
         public EntityBuilder EntityBuilder;
@@ -31,8 +36,15 @@ namespace VagabondRL
             Registry = new Registry();
             DrawableGroup = Registry.RegisterGroup<TransformComponent, DrawableComponent>();
             MovementGroup = Registry.RegisterGroup<TransformComponent, MovementComponent>();
+            PathingGroup = Registry.RegisterGroup<MovementComponent>();
+
+            Tilemap = Registry.CreateEntity();
+            Tilemap.TryAddComponent(new TilemapComponent()
+            {
+            });
 
             EntityBuilder = new EntityBuilder(Registry);
+            Pathfinder = new AStarPathfinder(Tilemap.GetComponent<TilemapComponent>().Graph);
         }
 
         public override void Initialize()
@@ -50,6 +62,8 @@ namespace VagabondRL
         public override void Update(GameTimer gameTimer)
         {
             GeneralSystems.MovementSystem(MovementGroup);
+            AISystems.PathingSystem(PathingGroup, Tilemap, Pathfinder);
+            AISystems.MovementSystem(MovementGroup);
         } // Update
 
         public override void Draw(GameTimer gameTimer)

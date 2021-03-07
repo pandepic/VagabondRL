@@ -9,6 +9,11 @@ using System.Threading.Tasks;
 
 namespace VagabondRL
 {
+    public enum CollisionType
+    {
+        Open, Blocked,
+    }
+
     public struct TransformComponent
     {
         public Entity Parent;
@@ -51,13 +56,18 @@ namespace VagabondRL
         public bool IsLooping;
     }
 
-    public struct MovementComponent
+    public struct TilemapComponent
     {
-        public List<Vector2> MovementPath;
+        public AStarGridGraph Graph;
+        public int[] Tiles;
+        public CollisionType[] Collisions;
+        public int Width, Height;
+        public string Name;
     }
 
     public struct PhysicsComponent
     {
+        public Vector2 Velocity;
     }
 
     public struct ColliderComponent

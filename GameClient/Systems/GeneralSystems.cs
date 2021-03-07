@@ -85,8 +85,18 @@ namespace VagabondRL
             }
         } // MovementSystem
 
-        public static void PhysicsSystem(Group group)
+        public static void PhysicsSystem(Group group, GameTimer gameTimer)
         {
+            foreach (var entity in group.Entities)
+            {
+                ref var transform = ref entity.GetComponent<TransformComponent>();
+                ref var physics = ref entity.GetComponent<PhysicsComponent>();
+
+                if (physics.Velocity == Vector2.Zero)
+                    continue;
+
+                transform.Position += physics.Velocity * gameTimer.DeltaS;
+            }
         }
 
     } // GeneralSystems
