@@ -64,6 +64,10 @@ namespace VagabondRL
             GeneralSystems.MovementSystem(MovementGroup);
             AISystems.PathingSystem(PathingGroup, Tilemap, Pathfinder);
             AISystems.MovementSystem(MovementGroup);
+
+            // process queues for removing entities and components etc.
+            Registry.SystemsFinished();
+
         } // Update
 
         public override void Draw(GameTimer gameTimer)
