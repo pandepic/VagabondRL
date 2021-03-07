@@ -10,17 +10,20 @@ namespace VagabondRL
 {
     public static class AISystems
     {
-        public static void PathingSystem(Group group, Entity tileMap, AStarPathfinder pathfinder)
+        public static void PathingSystem(Group group, AStarPathfinder pathfinder)
         {
-            ref var tilemapComponent = ref tileMap.GetComponent<TilemapComponent>();
-
             foreach (var entity in group.Entities)
             {
+                ref var transform = ref entity.GetComponent<TransformComponent>();
                 ref var movement = ref entity.GetComponent<MovementComponent>();
 
                 if (movement.MovementPath.Count == 0)
                 {
-                    // find a path to movement.Destination
+                    List<AStarPathResult> Path;
+                    if (pathfinder.GetPath(transform.Position, movement.Destination, out Path) == 
+                        AStarPathResultType.Success)
+                        foreach (AStarPathResult result in Path)
+                            movement.MovementPath.Add(result.Position);
                 }
             }
         }
@@ -31,6 +34,7 @@ namespace VagabondRL
             {
                 ref var movement = ref entity.GetComponent<MovementComponent>();
 
+                
                 // do stuff to move them through the movement path
             }
         }

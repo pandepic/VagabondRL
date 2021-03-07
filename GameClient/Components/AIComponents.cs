@@ -16,4 +16,9 @@ namespace VagabondRL
         public List<Vector2> MovementPath;
         public Vector2 Destination;
     }
+
+    public struct AStar
+    {
+
+    }
 }
