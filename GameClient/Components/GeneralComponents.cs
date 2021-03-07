@@ -43,8 +43,24 @@ namespace VagabondRL
         public int Layer;
     }
 
+    public struct AnimationComponent
+    {
+        public int StartFrame;
+        public int EndFrame;
+        public int CurrentFrame;
+        public bool IsLooping;
+    }
+
     public struct MovementComponent
     {
         public List<Vector2I> MovementPath;
+    }
+
+    public struct PhysicsComponent
+    {
+    }
+
+    public struct ColliderComponent
+    {
     }
 }

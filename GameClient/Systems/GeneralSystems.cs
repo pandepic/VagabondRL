@@ -85,5 +85,9 @@ namespace VagabondRL
             }
         } // MovementSystem
 
+        public static void PhysicsSystem(Group group)
+        {
+        }
+
     } // GeneralSystems
 }

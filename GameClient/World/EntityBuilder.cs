@@ -38,30 +38,13 @@ namespace VagabondRL
     public class EntityBuilder
     {
         public Registry Registry;
-        public Texture2D Tilesheet;
-        public Vector2I TilesheetTiles;
-        public Vector2I TileSize = new Vector2I(16);
 
-        public EntityBuilder(Registry registry, Texture2D tilesheet)
+        public EntityBuilder(Registry registry)
         {
             Registry = registry;
-            Tilesheet = tilesheet;
-
-            TilesheetTiles = tilesheet.Size / TileSize;
         }
 
-        public Rectangle GetSourceRect(TileType tile)
-        {
-            var tileIndex = (int)tile;
-
-            var tileCoords = new Vector2I(
-                tileIndex % TilesheetTiles.X,
-                tileIndex / TilesheetTiles.X);
-
-            return new Rectangle(tileCoords * TileSize, TileSize);
-        }
-
-        public Entity CreatePlayer(Vector2I position)
+        public Entity CreatePlayer(Vector2I position, Texture2D texture, Vector2I frameSize)
         {
             var player = Registry.CreateEntity();
             player.TryAddComponent(new PlayerComponent());
@@ -71,15 +54,15 @@ namespace VagabondRL
             });
             player.TryAddComponent(new DrawableComponent()
             {
-                AtlasRect = GetSourceRect(TileType.Player),
-                Texture = Tilesheet,
+                AtlasRect = new Rectangle(0, 0, frameSize.X, frameSize.Y),
+                Texture = texture,
                 Layer = (int)LayerType.Player,
             });
 
             return player;
         }
 
-        public Entity CreateGuard(Vector2I position)
+        public Entity CreateGuard(Vector2I position, Texture2D texture, Vector2I frameSize)
         {
             var guard = Registry.CreateEntity();
             guard.TryAddComponent(new GuardComponent());
@@ -89,8 +72,8 @@ namespace VagabondRL
             });
             guard.TryAddComponent(new DrawableComponent()
             {
-                AtlasRect = GetSourceRect(TileType.Guard),
-                Texture = Tilesheet,
+                AtlasRect = new Rectangle(0, 0, frameSize.X, frameSize.Y),
+                Texture = texture,
                 Layer = (int)LayerType.Guard,
             });
 
