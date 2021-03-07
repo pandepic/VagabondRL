@@ -22,13 +22,13 @@ namespace VagabondRL
             public int Layer;
         }
 
-        private static List<DrawItem> DrawList = new List<DrawItem>();
+        private static List<DrawItem> _drawList = new List<DrawItem>();
 
         public static void DrawableSystem(Group group, SpriteBatch2D spriteBatch, Camera2D camera)
         {
             var cameraView = camera.ScaledView;
 
-            DrawList.Clear();
+            _drawList.Clear();
 
             foreach (var entity in group.Entities)
             {
@@ -39,7 +39,7 @@ namespace VagabondRL
 
                 if (entityRect.Intersects(cameraView))
                 {
-                    DrawList.Add(new DrawItem()
+                    _drawList.Add(new DrawItem()
                     {
                         Position = transform.TransformedPosition.ToVector2I(),
                         Origin = drawable.Origin,
@@ -52,10 +52,10 @@ namespace VagabondRL
                 }
             }
 
-            if (DrawList.Count > 0)
+            if (_drawList.Count > 0)
             {
                 // sort by layer then Y position
-                DrawList.Sort((x, y) =>
+                _drawList.Sort((x, y) =>
                 {
                     var val = x.Layer.CompareTo(y.Layer);
 
@@ -65,7 +65,7 @@ namespace VagabondRL
                     return val;
                 });
 
-                foreach (var item in DrawList)
+                foreach (var item in _drawList)
                     spriteBatch.DrawTexture2D(item.Texture, item.Position, item.SourceRect, item.Scale, item.Origin, item.Rotation);
             }
         } // DrawableSystem
@@ -77,8 +77,11 @@ namespace VagabondRL
                 ref var transform = ref entity.GetComponent<TransformComponent>();
                 ref var movement = ref entity.GetComponent<MovementComponent>();
 
-                transform.Position += movement.Movement;
-                entity.TryRemoveComponent<MovementComponent>(); // todo : queue removals in registry for end of frame after all updates
+                if (movement.MovementPath.Count > 0)
+                {
+                    transform.Position += movement.MovementPath.GetLastItem();
+                    movement.MovementPath.RemoveLastItem();
+                }
             }
         } // MovementSystem
 

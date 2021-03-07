@@ -13,9 +13,9 @@ namespace VagabondRL
     {
         public Entity Parent;
         public float Rotation;
-        public Vector2 Position;
+        public Vector2I Position;
 
-        public Vector2 TransformedPosition
+        public Vector2I TransformedPosition
         {
             get
             {
@@ -45,6 +45,6 @@ namespace VagabondRL
 
     public struct MovementComponent
     {
-        public Vector2 Movement;
+        public List<Vector2I> MovementPath;
     }
 }

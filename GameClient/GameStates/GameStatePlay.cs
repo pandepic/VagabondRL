@@ -19,6 +19,9 @@ namespace VagabondRL
         public Group DrawableGroup;
         public Group MovementGroup;
 
+        // Entities
+        public EntityBuilder EntityBuilder;
+
         public GameStatePlay(Game game)
         {
             Game = game;
@@ -28,6 +31,8 @@ namespace VagabondRL
             Registry = new Registry();
             DrawableGroup = Registry.RegisterGroup<TransformComponent, DrawableComponent>();
             MovementGroup = Registry.RegisterGroup<TransformComponent, MovementComponent>();
+
+            EntityBuilder = new EntityBuilder(Registry, AssetManager.LoadTexture2D("tileset_legacy.png"));
         }
 
         public override void Initialize()
@@ -44,7 +49,6 @@ namespace VagabondRL
 
         public override void Update(GameTimer gameTimer)
         {
-            GeneralSystems.MovementSystem(MovementGroup);
         } // Update
 
         public override void Draw(GameTimer gameTimer)
@@ -58,6 +62,12 @@ namespace VagabondRL
             SpriteBatch.Begin(SamplerType.Point);
             SpriteBatch.End();
         } // Draw
+
+        // call this after the player does their turn/action
+        public void Tick()
+        {
+            GeneralSystems.MovementSystem(MovementGroup);
+        }
 
     } // GameStatePlay
 }

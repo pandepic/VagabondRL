@@ -24,11 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Mods\Base\Assets.xml" />
-    <None Remove="Mods\Mods.xml" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\ElementEngine\ElementEngine.csproj" />
   </ItemGroup>
 
