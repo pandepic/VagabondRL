@@ -19,6 +19,7 @@ namespace VagabondRL
                 ref var movement = ref entity.GetComponent<MovementComponent>();
                 ref var physics = ref entity.GetComponent<PhysicsComponent>();
 
+                // Has the entity exhausted its current movement path?
                 if (movement.MovementPath.Count == 0)
                 {
                     // Populate movement component with new path
@@ -45,19 +46,18 @@ namespace VagabondRL
             foreach (var entity in group.Entities)
             {
                 ref var movement = ref entity.GetComponent<MovementComponent>();
+                ref var transform = ref entity.GetComponent<TransformComponent>();
+                ref var physics = ref entity.GetComponent<PhysicsComponent>();
 
                 // Are there Targets left to aim at?
                 if (movement.CurrentTargetIndex < movement.MovementPath.Count)
                 {
-                    ref var transform = ref entity.GetComponent<TransformComponent>();
-                    ref var physics = ref entity.GetComponent<PhysicsComponent>();
-
                     // Have we traveled further than we need to to get to the target?
-                    float Dist = movement.ToCurrentTarget.Length();
-                    float DistTraveled = (transform.Position - movement.PreviousTarget).Length();
+                    float DistSq = movement.ToCurrentTarget.LengthSquared();
+                    float DistTraveledSq = (transform.Position - movement.PreviousTarget).LengthSquared();
 
                     // Yes, snap to target and head towards next target
-                    if (DistTraveled > Dist)
+                    if (DistTraveledSq >= DistSq)
                     {
                         transform.Position = movement.CurrentTarget;
                         movement.CurrentTargetIndex++;
@@ -65,6 +65,11 @@ namespace VagabondRL
 
                     // Aim towards current target
                     physics.Velocity = Vector2.Normalize(movement.ToCurrentTarget) * physics.Speed;
+                }
+                // There are no targets left to aim at. Stop. Stop it.
+                else
+                {
+                    physics.Velocity = Vector2.Zero;
                 }
 
             }
