@@ -67,6 +67,8 @@ namespace VagabondRL
 
     public struct PhysicsComponent
     {
+        public static float DefaultSpeed = 50.0f;
+        public float Speed;
         public Vector2 Velocity;
     }
 

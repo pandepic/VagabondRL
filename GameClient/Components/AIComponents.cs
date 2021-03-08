@@ -13,12 +13,22 @@ namespace VagabondRL
 
     public struct MovementComponent
     {
-        public List<Vector2> MovementPath;
-        public Vector2 Destination;
-    }
+        public static float DefaultSpeed = 50.0f;
 
-    public struct AStar
-    {
+        public Vector2 Start;
+        public Vector2 Destination;
+
+        public List<Vector2> MovementPath;
+        public int CurrentTargetIndex;
+
+        public Vector2 CurrentTarget => MovementPath[CurrentTargetIndex];
+        public Vector2 PreviousTarget
+            => (CurrentTargetIndex > 0) ?
+                MovementPath[CurrentTargetIndex] :
+                Start;
+        public Vector2 ToCurrentTarget => CurrentTarget - PreviousTarget;
+
+
 
     }
 }
