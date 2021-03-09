@@ -102,5 +102,37 @@ namespace VagabondRL
             }
         }
 
+        public static void FourDirectionSystem(Group group)
+        {
+            foreach (var entity in group.Entities)
+            {
+                ref var physics = ref entity.GetComponent<PhysicsComponent>();
+                ref var drawable = ref entity.GetComponent<DrawableComponent>();
+                ref var four = ref entity.GetComponent<FourDirectionComponent>();
+
+                if (physics.Velocity != Vector2.Zero)
+                {
+                    if (physics.Velocity.Y < 0) four.Facing = FacingType.Up;
+                    if (physics.Velocity.Y > 0) four.Facing = FacingType.Down;
+                    if (physics.Velocity.X < 0) four.Facing = FacingType.Left;
+                    if (physics.Velocity.X > 0) four.Facing = FacingType.Right;
+
+                    switch (four.Facing)
+                    {
+                        case FacingType.Up: drawable.AtlasRect.Y = 0; break;
+                        case FacingType.Down: drawable.AtlasRect.Y = 32; break;
+                        case FacingType.Left: drawable.AtlasRect.Y = 64; break;
+                        case FacingType.Right: drawable.AtlasRect.Y = 96; break;
+                    }
+                }
+
+
+
+            }
+
+        }
+
     } // GeneralSystems
+
+
 }

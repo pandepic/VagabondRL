@@ -9,6 +9,18 @@ using System.Threading.Tasks;
 
 namespace VagabondRL
 {
+    public enum FacingType
+    {
+        Up,
+        Down,
+        Left,
+        Right
+    }
+    public struct FourDirectionComponent
+    {
+        public FacingType Facing;
+    }
+
     public enum CollisionType
     {
         Open, Blocked,
