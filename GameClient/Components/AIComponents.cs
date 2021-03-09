@@ -27,8 +27,5 @@ namespace VagabondRL
                 MovementPath[CurrentTargetIndex] :
                 Start;
         public Vector2 ToCurrentTarget => CurrentTarget - PreviousTarget;
-
-
-
     }
 }

@@ -35,7 +35,9 @@ namespace VagabondRL
                 ref var drawable = ref entity.GetComponent<DrawableComponent>();
                 ref var transform = ref entity.GetComponent<TransformComponent>();
 
-                var entityRect = new Rectangle(transform.TransformedPosition - drawable.Origin, drawable.AtlasRect.SizeF);
+                Vector2I Pos = transform.TransformedPosition - drawable.Origin;
+                Vector2I Size = drawable.AtlasRect.Size;
+                var entityRect = new Rectangle(Pos, Size);
 
                 if (entityRect.Intersects(cameraView))
                 {
@@ -49,7 +51,7 @@ namespace VagabondRL
                         Texture = drawable.Texture,
                         Layer = drawable.Layer,
                     });
-                }
+                }            
             }
 
             if (_drawList.Count > 0)
@@ -68,6 +70,7 @@ namespace VagabondRL
                 foreach (var item in _drawList)
                     spriteBatch.DrawTexture2D(item.Texture, item.Position, item.SourceRect, item.Scale, item.Origin, item.Rotation);
             }
+
         } // DrawableSystem
 
         public static void MovementSystem(Group group)
