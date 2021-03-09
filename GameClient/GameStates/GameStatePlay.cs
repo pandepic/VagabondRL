@@ -107,10 +107,10 @@ namespace VagabondRL
         public override void Load()
         {
             Player.GetComponent<DrawableComponent>().Texture = 
-                AssetManager.LoadTexture2DFromPath("../../../Art/Player.png");
+                AssetManager.LoadTexture2D("Player.png");
 
             TestGuard.GetComponent<DrawableComponent>().Texture =
-                AssetManager.LoadTexture2DFromPath("../../../Art/Guard.png");
+                AssetManager.LoadTexture2D("Guard.png");
 
         }
 
