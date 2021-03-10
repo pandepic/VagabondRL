@@ -37,6 +37,7 @@ namespace VagabondRL
 
     public class EntityBuilder
     {
+        public static readonly Vector2I SpriteFrameSize = new Vector2I(16, 32);
         public Registry Registry;
 
         public EntityBuilder(Registry registry)
@@ -44,7 +45,7 @@ namespace VagabondRL
             Registry = registry;
         }
 
-        public Entity CreatePlayer(Vector2I position, Texture2D texture, Vector2I frameSize)
+        public Entity CreatePlayer(Vector2I position)
         {
             var player = Registry.CreateEntity();
             player.TryAddComponent(new PlayerComponent());
@@ -54,15 +55,16 @@ namespace VagabondRL
             });
             player.TryAddComponent(new DrawableComponent()
             {
-                AtlasRect = new Rectangle(0, 0, frameSize.X, frameSize.Y),
-                Texture = texture,
+                AtlasRect = new Rectangle(0, 0, SpriteFrameSize.X, SpriteFrameSize.Y),
+                Texture = AssetManager.LoadTexture2D("Player.png"),
                 Layer = (int)LayerType.Player,
             });
+            player.TryAddComponent(new FourDirectionComponent());
 
             return player;
         }
 
-        public Entity CreateGuard(Vector2I position, Texture2D texture, Vector2I frameSize)
+        public Entity CreateGuard(Vector2I position)
         {
             var guard = Registry.CreateEntity();
             guard.TryAddComponent(new GuardComponent());
@@ -72,10 +74,11 @@ namespace VagabondRL
             });
             guard.TryAddComponent(new DrawableComponent()
             {
-                AtlasRect = new Rectangle(0, 0, frameSize.X, frameSize.Y),
-                Texture = texture,
+                AtlasRect = new Rectangle(0, 0, SpriteFrameSize.X, SpriteFrameSize.Y),
+                Texture = AssetManager.LoadTexture2D("Guard.png"),
                 Layer = (int)LayerType.Guard,
             });
+            guard.TryAddComponent(new FourDirectionComponent());
 
             return guard;
         }
