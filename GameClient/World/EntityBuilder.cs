@@ -60,6 +60,7 @@ namespace VagabondRL
                 Layer = (int)LayerType.Player,
             });
             player.TryAddComponent(new FourDirectionComponent());
+            player.TryAddComponent(new PhysicsComponent());
 
             return player;
         }

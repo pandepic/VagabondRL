@@ -2,9 +2,13 @@
 using ElementEngine.ECS;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Veldrid;
+
+using Rectangle = ElementEngine.Rectangle;
 
 namespace VagabondRL
 {
@@ -14,7 +18,10 @@ namespace VagabondRL
         public SpriteBatch2D SpriteBatch;
         public Camera2D Camera;
 
+        public PrimitiveBatch PrimitiveBatch = new PrimitiveBatch();
+
         // AI
+        public MapGenerator MapGenerator;
         public AStarPathfinder Pathfinder;
         public Entity Tilemap;
 
@@ -53,6 +60,9 @@ namespace VagabondRL
 
             Player = EntityBuilder.CreatePlayer(new Vector2I());
             var testGuard = EntityBuilder.CreateGuard(new Vector2I());
+
+            MapGenerator = new MapGenerator(Tilemap);
+            MapGenerator.GenerateMap();
         }
 
         public override void Initialize()
@@ -83,6 +93,27 @@ namespace VagabondRL
 
         public override void Draw(GameTimer gameTimer)
         {
+            // map gen testing
+            PrimitiveBatch.Begin(SamplerType.Point, Camera.GetViewMatrix());
+
+            ref var tilemapComponent = ref Tilemap.GetComponent<TilemapComponent>();
+
+            for (var y = 0; y < tilemapComponent.Height; y++)
+            {
+                for (var x = 0; x < tilemapComponent.Width; x++)
+                {
+                    var index = x + tilemapComponent.Width * y;
+                    var color = RgbaFloat.Clear;
+
+                    if (tilemapComponent.Layers[0].Tiles[index] > 0)
+                        color = RgbaFloat.Red;
+
+                    PrimitiveBatch.DrawFilledRect(new Rectangle(new Vector2I(x, y) * MapGenerator.TileSize, MapGenerator.TileSize), color);
+                }
+            }
+
+            PrimitiveBatch.End();
+
             // world space
             SpriteBatch.Begin(SamplerType.Point, Camera.GetViewMatrix());
             GeneralSystems.DrawableSystem(DrawableGroup, SpriteBatch, Camera);
@@ -92,6 +123,12 @@ namespace VagabondRL
             SpriteBatch.Begin(SamplerType.Point);
             SpriteBatch.End();
         } // Draw
+
+        public override void HandleGameControl(string controlName, GameControlState state, GameTimer gameTimer)
+        {
+            if (controlName == "PassTurn" && state == GameControlState.Released)
+                MapGenerator.GenerateMap();
+        }
 
     } // GameStatePlay
 }

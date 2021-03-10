@@ -68,11 +68,18 @@ namespace VagabondRL
         public bool IsLooping;
     }
 
+    public struct TimemapLayer
+    {
+        public int[] Tiles;
+    }
+
     public struct TilemapComponent
     {
         public AStarGridGraph Graph;
-        public int[] Tiles;
+        public TimemapLayer[] Layers;
         public CollisionType[] Collisions;
+        public bool[] Expored;
+        public bool[] Visible;
         public int Width, Height;
         public string Name;
     }
