@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using Veldrid;
@@ -19,6 +20,19 @@ namespace VagabondRL
         public Camera2D Camera;
 
         public PrimitiveBatch PrimitiveBatch = new PrimitiveBatch();
+
+        protected bool _dragging = false;
+        protected Vector2 _dragMousePosition = Vector2.Zero;
+
+        protected int _zoomIndex = 1;
+        protected float[] _zoomLevels = new float[]
+        {
+            2f,
+            1f,
+            0.5f,
+            0.25f,
+            0.125f,
+        };
 
         // AI
         public MapGenerator MapGenerator;
@@ -42,6 +56,7 @@ namespace VagabondRL
             Game = game;
             SpriteBatch = new SpriteBatch2D();
             Camera = new Camera2D(new Rectangle(0, 0, Game.Window.Width, Game.Window.Height));
+            Camera.Zoom = 2;
             
             Registry = new Registry();
             DrawableGroup = Registry.RegisterGroup<TransformComponent, DrawableComponent>();
@@ -126,8 +141,67 @@ namespace VagabondRL
 
         public override void HandleGameControl(string controlName, GameControlState state, GameTimer gameTimer)
         {
-            if (controlName == "PassTurn" && state == GameControlState.Released)
-                MapGenerator.GenerateMap();
+            var mousePosition = InputManager.MousePosition;
+
+            switch (controlName)
+            {
+                case "PassTurn":
+                    if (state == GameControlState.Released)
+                    {
+                        MapGenerator.GenerateMap();
+                    }
+                    break;
+
+                case "DragCamera":
+                    if (state == GameControlState.Pressed)
+                    {
+                        if (!_dragging)
+                        {
+                            _dragging = true;
+                            _dragMousePosition = mousePosition;
+                        }
+                    }
+                    else if (state == GameControlState.Released)
+                    {
+                        if (_dragging)
+                            _dragging = false;
+                    }
+                    break;
+
+                case "ZoomIn":
+                    if (state == GameControlState.Released || state == GameControlState.WheelUp)
+                    {
+                        _zoomIndex -= 1;
+                        if (_zoomIndex < 0)
+                            _zoomIndex = 0;
+
+                        Camera.Zoom = _zoomLevels[_zoomIndex];
+                    }
+                    break;
+
+                case "ZoomOut":
+                    if (state == GameControlState.Released || state == GameControlState.WheelDown)
+                    {
+                        _zoomIndex += 1;
+                        if (_zoomIndex >= _zoomLevels.Length)
+                            _zoomIndex = _zoomLevels.Length - 1;
+
+                        Camera.Zoom = _zoomLevels[_zoomIndex];
+                    }
+                    break;
+            }
+        }
+
+        public override void HandleMouseMotion(Vector2 mousePosition, Vector2 prevMousePosition, GameTimer gameTimer)
+        {
+            if (_dragging)
+            {
+                var difference = mousePosition - _dragMousePosition;
+                difference /= Camera.Zoom;
+                Camera.Position -= difference;
+
+                _dragMousePosition = mousePosition;
+            }
         }
 
     } // GameStatePlay

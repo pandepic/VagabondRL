@@ -25,6 +25,11 @@
     
     <Setting Name="PassTurn" Value="Space" Type="Keyboard" />
     <Setting Name="SaveGame" Value="LControl+S" Type="Keyboard" />
+
+    <Setting Name="DragCamera" Value="Left" Type="Mouse" />
+
+    <Setting Name="ZoomIn" Value="WheelUp" Type="Mouse" />
+    <Setting Name="ZoomOut" Value="WheelDown" Type="Mouse" />
     
     <!--<Setting Name="ZoomIn" Value="WheelUp" Type="Mouse" />
     <Setting Name="ZoomOut" Value="WheelDown" Type="Mouse" />-->
