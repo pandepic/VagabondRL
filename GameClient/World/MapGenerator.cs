@@ -219,6 +219,7 @@ namespace VagabondRL
             tilemapComponent.Collisions = new CollisionType[mapSize.X * mapSize.Y];
             tilemapComponent.Layers = new TimemapLayer[1];
             tilemapComponent.Layers[0].Tiles = new int[mapSize.X * mapSize.Y];
+            tilemapComponent.PlayerSpawn = entry.Rect.Center * TileSize;
 
             // fill in tiles in tilemap
             foreach (var room in rooms)

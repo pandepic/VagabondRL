@@ -85,6 +85,7 @@ namespace VagabondRL
         public bool[] Visible;
         public int Width, Height;
         public string Name;
+        public Vector2I PlayerSpawn;
     }
 
     public struct PhysicsComponent
