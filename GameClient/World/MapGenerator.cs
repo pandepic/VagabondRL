@@ -242,7 +242,7 @@ namespace VagabondRL
             // fill in tiles in tilemap
             foreach (var room in rooms)
             {
-                var doorX = _rng.Next(room.Position.X + 1, room.Rect.Right - 1);
+                var doorX = _rng.Next(room.Position.X + 3, room.Rect.Right - 3);
                 var doorY = _rng.Next(0, 10) >= 5 ? room.Position.Y : room.Rect.Bottom - 1;
 
                 if (room.Position.Y == 0)
@@ -259,7 +259,7 @@ namespace VagabondRL
                         if ((x == room.Position.X || x == room.Rect.Right - 1)
                             || (y == room.Position.Y || y == room.Rect.Bottom - 1))
                         {
-                            if (x != door.X || y != door.Y)
+                            if ((x != door.X && x != door.X + 1) || y != door.Y)
                             {
                                 var index = x + mapSize.X * y;
                                 tilemapComponent.Collisions[index] = CollisionType.Blocked;
