@@ -218,6 +218,8 @@ namespace VagabondRL
             tilemapComponent.Width = mapSize.X;
             tilemapComponent.Height = mapSize.Y;
             tilemapComponent.Collisions = new CollisionType[mapSize.X * mapSize.Y];
+            tilemapComponent.Expored = new bool[mapSize.X * mapSize.Y];
+            tilemapComponent.Visible = new bool[mapSize.X * mapSize.Y];
             tilemapComponent.Layers = new TimemapLayer[1];
             tilemapComponent.Layers[0].Tiles = new int[mapSize.X * mapSize.Y];
             tilemapComponent.PlayerSpawn = entry.Rect.Center * TileSize;
@@ -260,6 +262,7 @@ namespace VagabondRL
                             if (x != door.X || y != door.Y)
                             {
                                 var index = x + mapSize.X * y;
+                                tilemapComponent.Collisions[index] = CollisionType.Blocked;
                                 tilemapComponent.Layers[0].Tiles[index] = 1;
                             }
                         }

@@ -139,6 +139,10 @@ namespace VagabondRL
                 for (var x = 0; x < tilemapComponent.Width; x++)
                 {
                     var index = x + tilemapComponent.Width * y;
+
+                    //if (!tilemapComponent.Expored[index] || !tilemapComponent.Visible[index])
+                    //    continue;
+
                     var color = RgbaFloat.Clear;
 
                     if (tilemapComponent.Layers[0].Tiles[index] > 0)
