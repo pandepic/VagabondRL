@@ -73,8 +73,10 @@ namespace VagabondRL
             {
             });
 
+            ref var tilemapComponent = ref Tilemap.GetComponent<TilemapComponent>();
+
             EntityBuilder = new EntityBuilder(Registry);
-            Pathfinder = new AStarPathfinder(Tilemap.GetComponent<TilemapComponent>().Graph);
+            Pathfinder = new AStarPathfinder(tilemapComponent.Graph);
 
             Player = EntityBuilder.CreatePlayer(new Vector2I());
             var testGuard = EntityBuilder.CreateGuard(new Vector2I());
@@ -83,6 +85,8 @@ namespace VagabondRL
             MapGenerator.GenerateMap();
 
             AreaSounds = new AreaSoundsManager();
+            ref var playerTransform = ref Player.GetComponent<TransformComponent>();
+            playerTransform.Position = tilemapComponent.PlayerSpawn;
         }
 
         public override void Initialize()
@@ -113,6 +117,8 @@ namespace VagabondRL
             // process queues for removing entities and components etc.
             Registry.SystemsFinished();
 
+            Camera.Center(Player.GetComponent<TransformComponent>().TransformedPosition.ToVector2I());
+
         } // Update
 
         public override void Draw(GameTimer gameTimer)
@@ -132,7 +138,7 @@ namespace VagabondRL
                     if (tilemapComponent.Layers[0].Tiles[index] > 0)
                         color = RgbaFloat.Red;
 
-                    PrimitiveBatch.DrawFilledRect(new Rectangle(new Vector2I(x, y) * MapGenerator.TileSize, MapGenerator.TileSize), color);
+                    PrimitiveBatch.DrawOutlinedRect(new Rectangle(new Vector2I(x, y) * MapGenerator.TileSize, MapGenerator.TileSize), RgbaFloat.Clear, color, 2);
                 }
             }
 
@@ -161,21 +167,21 @@ namespace VagabondRL
                     }
                     break;
 
-                case "DragCamera":
-                    if (state == GameControlState.Pressed)
-                    {
-                        if (!_dragging)
-                        {
-                            _dragging = true;
-                            _dragMousePosition = mousePosition;
-                        }
-                    }
-                    else if (state == GameControlState.Released)
-                    {
-                        if (_dragging)
-                            _dragging = false;
-                    }
-                    break;
+                //case "DragCamera":
+                //    if (state == GameControlState.Pressed)
+                //    {
+                //        if (!_dragging)
+                //        {
+                //            _dragging = true;
+                //            _dragMousePosition = mousePosition;
+                //        }
+                //    }
+                //    else if (state == GameControlState.Released)
+                //    {
+                //        if (_dragging)
+                //            _dragging = false;
+                //    }
+                //    break;
 
                 case "ZoomIn":
                     if (state == GameControlState.Released || state == GameControlState.WheelUp)

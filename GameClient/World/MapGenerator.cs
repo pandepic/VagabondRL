@@ -43,8 +43,8 @@ namespace VagabondRL
                     RoomType = RoomType.Entry,
                     MinCount = 1,
                     MaxCount = 1,
-                    MinSize = new Vector2I(10),
-                    MaxSize = new Vector2I(15),
+                    MinSize = new Vector2I(15),
+                    MaxSize = new Vector2I(20),
                 }
             },
 
@@ -54,8 +54,8 @@ namespace VagabondRL
                     RoomType = RoomType.Bedroom,
                     MinCount = 5,
                     MaxCount = 20,
-                    MinSize = new Vector2I(5),
-                    MaxSize = new Vector2I(10),
+                    MinSize = new Vector2I(10),
+                    MaxSize = new Vector2I(15),
                 }
             },
 
@@ -65,14 +65,14 @@ namespace VagabondRL
                     RoomType = RoomType.Kitchen,
                     MinCount = 2,
                     MaxCount = 4,
-                    MinSize = new Vector2I(5),
-                    MaxSize = new Vector2I(10),
+                    MinSize = new Vector2I(10),
+                    MaxSize = new Vector2I(15),
                 }
             },
         };
 
         public static readonly Vector2I TileSize = new Vector2I(16);
-        public static readonly Vector2I RoomPadding = new Vector2I(2);
+        public static readonly Vector2I RoomPadding = new Vector2I(4);
 
         private FastRandom _rng = new FastRandom();
         public Entity Tilemap;
@@ -219,16 +219,34 @@ namespace VagabondRL
             tilemapComponent.Collisions = new CollisionType[mapSize.X * mapSize.Y];
             tilemapComponent.Layers = new TimemapLayer[1];
             tilemapComponent.Layers[0].Tiles = new int[mapSize.X * mapSize.Y];
+            tilemapComponent.PlayerSpawn = entry.Rect.Center * TileSize;
 
             // fill in tiles in tilemap
             foreach (var room in rooms)
             {
+                var doorX = _rng.Next(room.Position.X + 1, room.Rect.Right - 1);
+                var doorY = _rng.Next(0, 10) >= 5 ? room.Position.Y : room.Rect.Bottom - 1;
+
+                if (room.Position.Y == 0)
+                    doorY = room.Rect.Bottom - 1;
+                else if (room.Rect.Bottom >= mapSize.Y)
+                    doorY = room.Position.Y;
+
+                var door = new Vector2I(doorX, doorY);
+
                 for (var y = room.Position.Y; y < room.Rect.Bottom; y++)
                 {
                     for (var x = room.Position.X; x < room.Rect.Right; x++)
                     {
-                        var index = x + mapSize.X * y;
-                        tilemapComponent.Layers[0].Tiles[index] = 1;
+                        if ((x == room.Position.X || x == room.Rect.Right - 1)
+                            || (y == room.Position.Y || y == room.Rect.Bottom - 1))
+                        {
+                            if (x != door.X || y != door.Y)
+                            {
+                                var index = x + mapSize.X * y;
+                                tilemapComponent.Layers[0].Tiles[index] = 1;
+                            }
+                        }
                     }
                 }
             }
