@@ -35,6 +35,8 @@ namespace VagabondRL
             0.125f,
         };
 
+        public Texture2D TileAtlas;
+
         // AI
         public MapGenerator MapGenerator;
         public AStarPathfinder Pathfinder;
@@ -93,6 +95,8 @@ namespace VagabondRL
             {
                 EntityBuilder.CreateGuard(guardSpawn + SpawnOffset);
             }
+
+            TileAtlas = AssetManager.LoadTexture2D("Environment.png");
         }
 
         public override void Initialize()
@@ -128,10 +132,22 @@ namespace VagabondRL
 
         public override void Draw(GameTimer gameTimer)
         {
-            // map gen testing
-            PrimitiveBatch.Begin(SamplerType.Point, Camera.GetViewMatrix());
-
             ref var tilemapComponent = ref Tilemap.GetComponent<TilemapComponent>();
+
+            // map gen testing
+            //PrimitiveBatch.Begin(SamplerType.Point, Camera.GetViewMatrix());
+
+            //PrimitiveBatch.DrawEmptyCircle(
+            //    Player.GetComponent<TransformComponent>().TransformedPosition.ToVector2I(),
+            //    (float)(MapGenerator.TileSize.X * Player.GetComponent<VisionComponent>().Range), RgbaFloat.Red);
+
+            //PrimitiveBatch.End();
+
+            var floorSourceRect = new Rectangle(16, 48, 16, 16);
+            var wallSourceRect = new Rectangle(16, 112, 16, 16);
+
+            // world space
+            SpriteBatch.Begin(SamplerType.Point, Camera.GetViewMatrix());
 
             for (var y = 0; y < tilemapComponent.Height; y++)
             {
@@ -142,23 +158,20 @@ namespace VagabondRL
                     if (!tilemapComponent.Expored[index])
                         continue;
 
-                    var color = RgbaFloat.LightGrey;
+                    var sourceRect = wallSourceRect;
 
                     if (tilemapComponent.Layers[0].Tiles[index] > 0)
-                        color = RgbaFloat.Red;
+                        sourceRect = floorSourceRect;
 
-                    PrimitiveBatch.DrawFilledRect(new Rectangle(new Vector2I(x, y) * MapGenerator.TileSize, MapGenerator.TileSize), color);
+                    var tintColor = new RgbaFloat(0.5f, 0.5f, 0.5f, 0.6f);
+
+                    if (tilemapComponent.Visible[index])
+                        tintColor = RgbaFloat.White;
+
+                    SpriteBatch.DrawTexture2D(TileAtlas, new Rectangle(new Vector2I(x, y) * MapGenerator.TileSize, MapGenerator.TileSize), sourceRect, color: tintColor);
                 }
             }
 
-            PrimitiveBatch.DrawEmptyCircle(
-                Player.GetComponent<TransformComponent>().TransformedPosition.ToVector2I(),
-                (float)(MapGenerator.TileSize.X * Player.GetComponent<VisionComponent>().Range), RgbaFloat.Red);
-
-            PrimitiveBatch.End();
-
-            // world space
-            SpriteBatch.Begin(SamplerType.Point, Camera.GetViewMatrix());
             GeneralSystems.DrawableSystem(DrawableGroup, SpriteBatch, Camera);
             SpriteBatch.End();
 
