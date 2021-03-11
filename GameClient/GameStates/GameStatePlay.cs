@@ -47,6 +47,7 @@ namespace VagabondRL
         public Group PathingGroup;
         public Group PhysicsGroup;
         public Group FourDirectionSpriteGroup;  // entities which are drawn with a 4-direction-type sprite
+        public Group GuardVisibleGroup;
 
         // Entities
         public EntityBuilder EntityBuilder;
@@ -67,6 +68,7 @@ namespace VagabondRL
             PathingGroup = Registry.RegisterGroup<MovementComponent>();
             PhysicsGroup = Registry.RegisterGroup<TransformComponent, PhysicsComponent>();
             FourDirectionSpriteGroup = Registry.RegisterGroup<FourDirectionComponent, PhysicsComponent, DrawableComponent>();
+            GuardVisibleGroup = Registry.RegisterGroup<GuardComponent, TransformComponent, DrawableComponent>();
 
             Tilemap = Registry.CreateEntity();
             Tilemap.TryAddComponent(new TilemapComponent()
@@ -115,6 +117,7 @@ namespace VagabondRL
             AISystems.MovementSystem(MovementGroup);
             AISystems.AreaSoundSystem(AreaSounds, gameTimer);
             GeneralSystems.PhysicsSystem(PhysicsGroup, gameTimer);
+            GeneralSystems.VisionSystem(Player, Tilemap, GuardVisibleGroup);
 
             // process queues for removing entities and components etc.
             Registry.SystemsFinished();
@@ -136,17 +139,21 @@ namespace VagabondRL
                 {
                     var index = x + tilemapComponent.Width * y;
 
-                    //if (!tilemapComponent.Expored[index] || !tilemapComponent.Visible[index])
-                    //    continue;
+                    if (!tilemapComponent.Expored[index])
+                        continue;
 
-                    var color = RgbaFloat.Clear;
+                    var color = RgbaFloat.LightGrey;
 
                     if (tilemapComponent.Layers[0].Tiles[index] > 0)
                         color = RgbaFloat.Red;
 
-                    PrimitiveBatch.DrawOutlinedRect(new Rectangle(new Vector2I(x, y) * MapGenerator.TileSize, MapGenerator.TileSize), RgbaFloat.Clear, color, 2);
+                    PrimitiveBatch.DrawFilledRect(new Rectangle(new Vector2I(x, y) * MapGenerator.TileSize, MapGenerator.TileSize), color);
                 }
             }
+
+            PrimitiveBatch.DrawEmptyCircle(
+                Player.GetComponent<TransformComponent>().TransformedPosition.ToVector2I(),
+                (float)(MapGenerator.TileSize.X * Player.GetComponent<VisionComponent>().Range), RgbaFloat.Red);
 
             PrimitiveBatch.End();
 

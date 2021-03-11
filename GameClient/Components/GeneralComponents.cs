@@ -61,6 +61,7 @@ namespace VagabondRL
         public Vector2 Scale;
         public Texture2D Texture;
         public int Layer;
+        public bool IsVisible;
     }
 
     public struct AnimationComponent

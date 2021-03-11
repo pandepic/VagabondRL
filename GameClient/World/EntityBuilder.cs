@@ -60,6 +60,7 @@ namespace VagabondRL
                 Texture = AssetManager.LoadTexture2D("Player.png"),
                 Layer = (int)LayerType.Player,
                 Scale = new Vector2(1f),
+                IsVisible = true,
             });
             player.TryAddComponent(new FourDirectionComponent()
             {
@@ -70,6 +71,10 @@ namespace VagabondRL
             player.TryAddComponent(new PhysicsComponent()
             {
                 Speed = 50f,
+            });
+            player.TryAddComponent(new VisionComponent()
+            {
+                Range = 10,
             });
 
             return player;
