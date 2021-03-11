@@ -128,7 +128,7 @@ namespace VagabondRL
                     if (tilemapComponent.Layers[0].Tiles[index] > 0)
                         color = RgbaFloat.Red;
 
-                    PrimitiveBatch.DrawFilledRect(new Rectangle(new Vector2I(x, y) * MapGenerator.TileSize, MapGenerator.TileSize), color);
+                    PrimitiveBatch.DrawOutlinedRect(new Rectangle(new Vector2I(x, y) * MapGenerator.TileSize, MapGenerator.TileSize), RgbaFloat.Clear, color, 2);
                 }
             }
 
