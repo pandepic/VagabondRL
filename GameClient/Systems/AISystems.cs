@@ -47,7 +47,7 @@ namespace VagabondRL
             }
         }
 
-        public static void MovementSystem(Group group)
+        public static void MovementSystem(Group group, GameTimer gameTimer)
         {
             foreach (var entity in group.Entities)
             {
@@ -56,13 +56,23 @@ namespace VagabondRL
                 ref var physics = ref entity.GetComponent<PhysicsComponent>();
 
                 Vector2 ToTarget = movement.CurrentTarget - movement.PreviousTarget;
-                float DistanceSq = ToTarget.LengthSquared();
+                Vector2 ToTargetDir = Vector2.Normalize(ToTarget);
+                float Distance = ToTarget.Length();
                 Vector2 Traveled = transform.Position - movement.PreviousTarget;
-                float DistanceTraveledSq = Traveled.LengthSquared();
+                float DistanceTraveled = Traveled.Length();
 
-                if (DistanceTraveledSq < DistanceSq)
+                // for Linear Interpolation
+                float T = Distance / DistanceTraveled;
+
+                // Not yet reached destination
+                if (T < 1.0f)
                 {
-
+                    physics.Velocity = ToTarget * physics.Speed;
+                }
+                // reached destination
+                else
+                {
+                    movement.CurrentTargetIndex += 1;
                 }
 
             }
