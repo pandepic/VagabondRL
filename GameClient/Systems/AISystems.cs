@@ -31,19 +31,18 @@ namespace VagabondRL
                 ref var movement = ref entity.GetComponent<MovementComponent>();
                 ref var physics = ref entity.GetComponent<PhysicsComponent>();
 
-                if (entity.HasComponent<GuardComponent>())
+
+                // Has the entity exhausted its current movement path?
+                if (movement.MovementPath.Count == 0)
                 {
-                    // Has the entity exhausted its current movement path?
-                    if (movement.MovementPath.Count == 0)
-                    {
-                        // Populate movement component with new path
-                        List<AStarPathResult> Path;
-                        if (pathfinder.GetPath(transform.Position, movement.Destination, out Path) ==
-                            AStarPathResultType.Success)
-                            foreach (AStarPathResult result in Path)
-                                movement.MovementPath.Add(result.Position);
-                    }
+                    // Populate movement component with new path
+                    List<AStarPathResult> Path;
+                    if (pathfinder.GetPath(transform.Position, movement.Destination, out Path) ==
+                        AStarPathResultType.Success)
+                        foreach (AStarPathResult result in Path)
+                            movement.MovementPath.Add(result.Position);
                 }
+
             }
         }
 
