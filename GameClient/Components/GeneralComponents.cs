@@ -99,4 +99,9 @@ namespace VagabondRL
     public struct ColliderComponent
     {
     }
+
+    public struct VisionComponent
+    {
+        public int Range;
+    }
 }
