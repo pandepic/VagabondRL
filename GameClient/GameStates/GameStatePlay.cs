@@ -109,6 +109,8 @@ namespace VagabondRL
             // process queues for removing entities and components etc.
             Registry.SystemsFinished();
 
+            Camera.Center(Player.GetComponent<TransformComponent>().TransformedPosition.ToVector2I());
+
         } // Update
 
         public override void Draw(GameTimer gameTimer)
@@ -157,21 +159,21 @@ namespace VagabondRL
                     }
                     break;
 
-                case "DragCamera":
-                    if (state == GameControlState.Pressed)
-                    {
-                        if (!_dragging)
-                        {
-                            _dragging = true;
-                            _dragMousePosition = mousePosition;
-                        }
-                    }
-                    else if (state == GameControlState.Released)
-                    {
-                        if (_dragging)
-                            _dragging = false;
-                    }
-                    break;
+                //case "DragCamera":
+                //    if (state == GameControlState.Pressed)
+                //    {
+                //        if (!_dragging)
+                //        {
+                //            _dragging = true;
+                //            _dragMousePosition = mousePosition;
+                //        }
+                //    }
+                //    else if (state == GameControlState.Released)
+                //    {
+                //        if (_dragging)
+                //            _dragging = false;
+                //    }
+                //    break;
 
                 case "ZoomIn":
                     if (state == GameControlState.Released || state == GameControlState.WheelUp)

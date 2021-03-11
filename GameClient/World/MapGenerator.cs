@@ -43,8 +43,8 @@ namespace VagabondRL
                     RoomType = RoomType.Entry,
                     MinCount = 1,
                     MaxCount = 1,
-                    MinSize = new Vector2I(12),
-                    MaxSize = new Vector2I(18),
+                    MinSize = new Vector2I(15),
+                    MaxSize = new Vector2I(20),
                 }
             },
 
@@ -54,8 +54,8 @@ namespace VagabondRL
                     RoomType = RoomType.Bedroom,
                     MinCount = 5,
                     MaxCount = 20,
-                    MinSize = new Vector2I(8),
-                    MaxSize = new Vector2I(12),
+                    MinSize = new Vector2I(10),
+                    MaxSize = new Vector2I(15),
                 }
             },
 
@@ -65,8 +65,8 @@ namespace VagabondRL
                     RoomType = RoomType.Kitchen,
                     MinCount = 2,
                     MaxCount = 4,
-                    MinSize = new Vector2I(8),
-                    MaxSize = new Vector2I(12),
+                    MinSize = new Vector2I(10),
+                    MaxSize = new Vector2I(15),
                 }
             },
         };
