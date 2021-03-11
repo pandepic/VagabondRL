@@ -68,7 +68,10 @@ namespace VagabondRL
                     Facing = FacingType.Down 
                 }
             );
-            player.TryAddComponent(new PhysicsComponent());
+            player.TryAddComponent(new PhysicsComponent()
+            {
+                Speed = 50f,
+            });
 
 
             return player;
