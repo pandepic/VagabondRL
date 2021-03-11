@@ -28,6 +28,7 @@ namespace VagabondRL
         public RoomType RoomType;
         public Vector2I Position;
         public Vector2I Size;
+        public bool SpawnedGuard;
 
         public Rectangle Rect => new Rectangle(Position, Size);
         public Rectangle PaddedRect => new Rectangle(Position - MapGenerator.RoomPadding / 2, Size + MapGenerator.RoomPadding);
@@ -220,6 +221,21 @@ namespace VagabondRL
             tilemapComponent.Layers = new TimemapLayer[1];
             tilemapComponent.Layers[0].Tiles = new int[mapSize.X * mapSize.Y];
             tilemapComponent.PlayerSpawn = entry.Rect.Center * TileSize;
+
+            tilemapComponent.GuardSpawns = new Vector2I[rooms.Count / 3];
+            var guardCount = 0;
+
+            while (guardCount < tilemapComponent.GuardSpawns.Length)
+            {
+                var spawnRoom = rooms.GetRandomItem(_rng);
+
+                if (spawnRoom.SpawnedGuard)
+                    continue;
+
+                spawnRoom.SpawnedGuard = true;
+                tilemapComponent.GuardSpawns[guardCount] = spawnRoom.Rect.Center * TileSize;
+                guardCount += 1;
+            }
 
             // fill in tiles in tilemap
             foreach (var room in rooms)

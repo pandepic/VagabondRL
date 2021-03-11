@@ -77,14 +77,18 @@ namespace VagabondRL
             Pathfinder = new AStarPathfinder(tilemapComponent.Graph);
 
             Player = EntityBuilder.CreatePlayer(new Vector2I());
-            var testGuard = EntityBuilder.CreateGuard(new Vector2I());
 
             MapGenerator = new MapGenerator(Tilemap);
             MapGenerator.GenerateMap();
 
             AreaSounds = new AreaSoundsManager();
             ref var playerTransform = ref Player.GetComponent<TransformComponent>();
-            playerTransform.Position = tilemapComponent.PlayerSpawn;
+            playerTransform.Position = tilemapComponent.PlayerSpawn - MapGenerator.TileSize;
+
+            foreach (var guardSpawn in tilemapComponent.GuardSpawns)
+            {
+                EntityBuilder.CreateGuard(guardSpawn - MapGenerator.TileSize);
+            }
         }
 
         public override void Initialize()
