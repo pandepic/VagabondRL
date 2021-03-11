@@ -163,7 +163,7 @@ namespace VagabondRL
                     if (tilemapComponent.Layers[0].Tiles[index] > 0)
                         sourceRect = floorSourceRect;
 
-                    var tintColor = new RgbaFloat(0.5f, 0.5f, 0.5f, 0.6f);
+                    var tintColor = new RgbaFloat(0.3f, 0.3f, 0.3f, 0.8f);
 
                     if (tilemapComponent.Visible[index])
                         tintColor = RgbaFloat.White;

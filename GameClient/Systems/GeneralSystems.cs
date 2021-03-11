@@ -197,7 +197,7 @@ namespace VagabondRL
             for (var i = 0; i < tilemapComponent.Visible.Length; i++)
                 tilemapComponent.Visible[i] = false;
 
-            var pointCount = 1000;
+            var pointCount = 200;
 
             for (var i = 0f; i < 2 * MathF.PI; i += 2 * MathF.PI / pointCount)
             {
