@@ -64,7 +64,7 @@ namespace VagabondRL
             MovementGroup = Registry.RegisterGroup<TransformComponent, MovementComponent>();
             PathingGroup = Registry.RegisterGroup<MovementComponent>();
             PhysicsGroup = Registry.RegisterGroup<TransformComponent, PhysicsComponent>();
-            FourDirectionSpriteGroup = Registry.RegisterGroup<FourDirectionComponent>();
+            FourDirectionSpriteGroup = Registry.RegisterGroup<FourDirectionComponent, PhysicsComponent, DrawableComponent>();
 
             Tilemap = Registry.CreateEntity();
             Tilemap.TryAddComponent(new TilemapComponent()

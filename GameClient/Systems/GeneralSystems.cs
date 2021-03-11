@@ -126,14 +126,15 @@ namespace VagabondRL
                         case FacingType.Right: drawable.AtlasRect.Y = 96; break;
                     }
 
-                    // Update frame
-                    four.AnimationTimer.Update(gameTimer);
-                    if (four.AnimationTimer.TicThisUpdate)
+                    four.CurrentFrameTime += gameTimer.DeltaS;
+
+                    if (four.CurrentFrameTime >= four.BaseFrameTime)
                     {
+                        four.CurrentFrameTime = 0f;
                         four.CurrentFrame += 1;
+
                         if (four.CurrentFrame > 3)
                             four.CurrentFrame -= 4;
-
                     }
                 }
                 else

@@ -62,17 +62,15 @@ namespace VagabondRL
                 Scale = new Vector2(1f),
             });
             player.TryAddComponent(new FourDirectionComponent()
-                { 
-                    AnimationTimer = new Timer(0.2f),
-                    CurrentFrame = 0,
-                    Facing = FacingType.Down 
-                }
-            );
+            {
+                BaseFrameTime = 0.2f,
+                CurrentFrame = 0,
+                Facing = FacingType.Down
+            });
             player.TryAddComponent(new PhysicsComponent()
             {
                 Speed = 50f,
             });
-
 
             return player;
         }
