@@ -3,6 +3,7 @@ using ElementEngine.ECS;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -58,6 +59,7 @@ namespace VagabondRL
                 AtlasRect = new Rectangle(0, 0, SpriteFrameSize.X, SpriteFrameSize.Y),
                 Texture = AssetManager.LoadTexture2D("Player.png"),
                 Layer = (int)LayerType.Player,
+                Scale = new Vector2(1f),
             });
             player.TryAddComponent(new FourDirectionComponent()
                 { 
@@ -85,6 +87,7 @@ namespace VagabondRL
                 AtlasRect = new Rectangle(0, 0, SpriteFrameSize.X, SpriteFrameSize.Y),
                 Texture = AssetManager.LoadTexture2D("Guard.png"),
                 Layer = (int)LayerType.Guard,
+                Scale = new Vector2(1f),
             });
             guard.TryAddComponent(new FourDirectionComponent());
 

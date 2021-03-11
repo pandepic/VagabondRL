@@ -125,7 +125,7 @@ namespace VagabondRL
             rooms.Shuffle(_rng);
             // always place entry last so it'll be accessible from outside
             rooms.Add(entry);
-            
+
             // calculate width of room cells grid (grid is biased to being wider than tall)
             var widthRooms = (int)Math.Sqrt(rooms.Count) + 2;
             var heightRooms = 0;
@@ -231,6 +231,42 @@ namespace VagabondRL
                         tilemapComponent.Layers[0].Tiles[index] = 1;
                     }
                 }
+            }
+
+            // top wall
+            for (var x = 0; x < mapSize.X; x++)
+            {
+                var y = 0;
+
+                var index = x + mapSize.X * y;
+                tilemapComponent.Layers[0].Tiles[index] = 1;
+            }
+
+            // left wall
+            for (var y = 0; y < mapSize.Y; y++)
+            {
+                var x = 0;
+
+                var index = x + mapSize.X * y;
+                tilemapComponent.Layers[0].Tiles[index] = 1;
+            }
+
+            // right wall
+            for (var y = 0; y < mapSize.Y; y++)
+            {
+                var x = mapSize.X - 1;
+
+                var index = x + mapSize.X * y;
+                tilemapComponent.Layers[0].Tiles[index] = 1;
+            }
+
+            // bottom wall
+            for (var x = 0; x < mapSize.X; x++)
+            {
+                var y = mapSize.Y - 1;
+
+                var index = x + mapSize.X * y;
+                tilemapComponent.Layers[0].Tiles[index] = 1;
             }
 
         } // GenerateMap
