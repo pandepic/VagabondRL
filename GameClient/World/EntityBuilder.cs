@@ -59,8 +59,15 @@ namespace VagabondRL
                 Texture = AssetManager.LoadTexture2D("Player.png"),
                 Layer = (int)LayerType.Player,
             });
-            player.TryAddComponent(new FourDirectionComponent());
+            player.TryAddComponent(new FourDirectionComponent()
+                { 
+                    AnimationTimer = new Timer(0.2f),
+                    CurrentFrame = 0,
+                    Facing = FacingType.Down 
+                }
+            );
             player.TryAddComponent(new PhysicsComponent());
+
 
             return player;
         }

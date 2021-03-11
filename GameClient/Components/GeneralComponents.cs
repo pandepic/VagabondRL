@@ -19,6 +19,8 @@ namespace VagabondRL
     public struct FourDirectionComponent
     {
         public FacingType Facing;
+        public int CurrentFrame;
+        public Timer AnimationTimer;
     }
 
     public enum CollisionType
@@ -66,6 +68,7 @@ namespace VagabondRL
         public int EndFrame;
         public int CurrentFrame;
         public bool IsLooping;
+        public Timer AnimationTimer;
     }
 
     public struct TimemapLayer

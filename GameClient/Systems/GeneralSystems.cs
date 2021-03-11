@@ -102,7 +102,7 @@ namespace VagabondRL
             }
         }
 
-        public static void FourDirectionSystem(Group group)
+        public static void FourDirectionSystem(Group group, GameTimer gameTimer)
         {
             foreach (var entity in group.Entities)
             {
@@ -112,6 +112,7 @@ namespace VagabondRL
 
                 if (physics.Velocity != Vector2.Zero)
                 {
+                    // Update facing
                     if (physics.Velocity.Y < 0) four.Facing = FacingType.Up;
                     if (physics.Velocity.Y > 0) four.Facing = FacingType.Down;
                     if (physics.Velocity.X < 0) four.Facing = FacingType.Left;
@@ -124,9 +125,23 @@ namespace VagabondRL
                         case FacingType.Left: drawable.AtlasRect.Y = 64; break;
                         case FacingType.Right: drawable.AtlasRect.Y = 96; break;
                     }
+
+                    // Update frame
+                    four.AnimationTimer.Update(gameTimer);
+                    if (four.AnimationTimer.TicThisUpdate)
+                    {
+                        four.CurrentFrame += 1;
+                        if (four.CurrentFrame > 3)
+                            four.CurrentFrame -= 4;
+
+                    }
+                }
+                else
+                {
+                    four.CurrentFrame = 0;
                 }
 
-
+                drawable.AtlasRect.X = four.CurrentFrame * 16;
 
             }
 

@@ -99,7 +99,7 @@ namespace VagabondRL
         {
             // Player
             PlayerSystems.ControllerMovementSystem(Player);
-            GeneralSystems.FourDirectionSystem(FourDirectionSpriteGroup);
+            GeneralSystems.FourDirectionSystem(FourDirectionSpriteGroup, gameTimer);
             GeneralSystems.MovementSystem(MovementGroup);
             AISystems.PathingSystem(PathingGroup, Pathfinder);
             AISystems.MovementSystem(MovementGroup);
