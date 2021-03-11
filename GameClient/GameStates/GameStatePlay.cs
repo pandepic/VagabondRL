@@ -52,6 +52,8 @@ namespace VagabondRL
         public EntityBuilder EntityBuilder;
         public Entity Player;
 
+        public static readonly Vector2I SpawnOffset = new Vector2I(0, -MapGenerator.TileSize.Y);
+
         public GameStatePlay(Game game)
         {
             Game = game;
@@ -83,11 +85,11 @@ namespace VagabondRL
 
             AreaSounds = new AreaSoundsManager();
             ref var playerTransform = ref Player.GetComponent<TransformComponent>();
-            playerTransform.Position = tilemapComponent.PlayerSpawn - MapGenerator.TileSize;
+            playerTransform.Position = tilemapComponent.PlayerSpawn + SpawnOffset;
 
             foreach (var guardSpawn in tilemapComponent.GuardSpawns)
             {
-                EntityBuilder.CreateGuard(guardSpawn - MapGenerator.TileSize);
+                EntityBuilder.CreateGuard(guardSpawn + SpawnOffset);
             }
         }
 
