@@ -229,7 +229,7 @@ namespace VagabondRL
             {
                 var spawnRoom = rooms.GetRandomItem(_rng);
 
-                if (spawnRoom.SpawnedGuard)
+                if (spawnRoom.SpawnedGuard || spawnRoom == entry)
                     continue;
 
                 spawnRoom.SpawnedGuard = true;
