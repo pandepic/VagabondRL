@@ -81,6 +81,10 @@ namespace VagabondRL
             });
             guard.TryAddComponent(new FourDirectionComponent());
 
+            guard.TryAddComponent(new GuardStateComponent());
+            guard.TryAddComponent(new GuardSensesComponent());
+            guard.TryAddComponent(new GuardMemoryComponent());
+
             return guard;
         }
     }

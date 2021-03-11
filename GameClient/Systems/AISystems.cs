@@ -45,5 +45,30 @@ namespace VagabondRL
 
             }
         }
+
+        public static void GuardSenseSystem(Group group)
+        {
+            foreach (var entity in group.Entities)
+            {
+
+            }
+        }
+
+        public static void AreaSoundSystem(AreaSoundsManager areaSoundsManager, GameTimer gameTimer)
+        {
+            foreach (AreaSound sound in areaSoundsManager.Sounds)
+            {
+                sound.SoundTimer.Update(gameTimer);
+                if (sound.SoundTimer.TicThisUpdate)
+                {
+                    sound.Level -= 1;
+
+                    if (sound.Level == 0)
+                    {
+                        areaSoundsManager.Sounds.Remove(sound);
+                    }
+                }
+            }
+        }
     }
 }

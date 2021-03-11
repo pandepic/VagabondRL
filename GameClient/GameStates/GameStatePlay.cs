@@ -18,6 +18,7 @@ namespace VagabondRL
         public Game Game;
         public SpriteBatch2D SpriteBatch;
         public Camera2D Camera;
+        public AreaSoundsManager AreaSounds;
 
         public PrimitiveBatch PrimitiveBatch = new PrimitiveBatch();
 
@@ -78,6 +79,8 @@ namespace VagabondRL
 
             MapGenerator = new MapGenerator(Tilemap);
             MapGenerator.GenerateMap();
+
+            AreaSounds = new AreaSoundsManager();
         }
 
         public override void Initialize()
@@ -94,11 +97,13 @@ namespace VagabondRL
 
         public override void Update(GameTimer gameTimer)
         {
+            // Player
             PlayerSystems.ControllerMovementSystem(Player);
             GeneralSystems.FourDirectionSystem(FourDirectionSpriteGroup);
             GeneralSystems.MovementSystem(MovementGroup);
             AISystems.PathingSystem(PathingGroup, Pathfinder);
             AISystems.MovementSystem(MovementGroup);
+            AISystems.AreaSoundSystem(AreaSounds, gameTimer);
             GeneralSystems.PhysicsSystem(PhysicsGroup, gameTimer);
 
             // process queues for removing entities and components etc.

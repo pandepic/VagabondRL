@@ -11,6 +11,30 @@ namespace VagabondRL
     public struct PlayerComponent { }
     public struct GuardComponent { }
 
+    public struct GuardStateComponent
+    {
+        public enum GuardStateType
+        {
+            PATROL,
+            CAUTIOUS,
+            ALERT
+        }
+
+        GuardStateType State;
+    }
+
+    public struct GuardSensesComponent
+    {
+
+    }
+
+    public struct GuardMemoryComponent
+    {
+
+    }
+
+
+
     public struct MovementComponent
     {
         public static float DefaultSpeed = 50.0f;
