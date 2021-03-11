@@ -11,6 +11,18 @@ namespace VagabondRL
 {
     public static class AISystems
     {
+        public static void GuardAISystem(Group group, Entity player)
+        {
+            ref var playerTransform = ref player.GetComponent<TransformComponent>();
+
+            foreach (var entity in group.Entities)
+            {
+                ref var movement = ref entity.GetComponent<MovementComponent>();
+
+                movement.Destination = playerTransform.Position;
+            }
+        }
+
         public static void PathingSystem(Group group, AStarPathfinder pathfinder)
         {
             foreach (var entity in group.Entities)
@@ -42,6 +54,16 @@ namespace VagabondRL
                 ref var movement = ref entity.GetComponent<MovementComponent>();
                 ref var transform = ref entity.GetComponent<TransformComponent>();
                 ref var physics = ref entity.GetComponent<PhysicsComponent>();
+
+                Vector2 ToTarget = movement.CurrentTarget - movement.PreviousTarget;
+                float DistanceSq = ToTarget.LengthSquared();
+                Vector2 Traveled = transform.Position - movement.PreviousTarget;
+                float DistanceTraveledSq = Traveled.LengthSquared();
+
+                if (DistanceTraveledSq < DistanceSq)
+                {
+
+                }
 
             }
         }
