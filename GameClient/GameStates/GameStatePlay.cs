@@ -49,6 +49,7 @@ namespace VagabondRL
         public Group PathingGroup;
         public Group PhysicsGroup;
         public Group FourDirectionSpriteGroup;  // entities which are drawn with a 4-direction-type sprite
+        public Group GuardGroup;
         public Group GuardVisibleGroup;
 
         // Entities
@@ -67,10 +68,11 @@ namespace VagabondRL
             Registry = new Registry();
             DrawableGroup = Registry.RegisterGroup<TransformComponent, DrawableComponent>();
             MovementGroup = Registry.RegisterGroup<TransformComponent, MovementComponent>();
-            PathingGroup = Registry.RegisterGroup<MovementComponent>();
+            PathingGroup = Registry.RegisterGroup<TransformComponent, MovementComponent>();
             PhysicsGroup = Registry.RegisterGroup<TransformComponent, PhysicsComponent>();
             FourDirectionSpriteGroup = Registry.RegisterGroup<FourDirectionComponent, PhysicsComponent, DrawableComponent>();
             GuardVisibleGroup = Registry.RegisterGroup<GuardComponent, TransformComponent, DrawableComponent>();
+            GuardGroup = Registry.RegisterGroup<GuardComponent, MovementComponent>();
 
             Tilemap = Registry.CreateEntity();
             Tilemap.TryAddComponent(new TilemapComponent()
@@ -117,8 +119,9 @@ namespace VagabondRL
             PlayerSystems.ControllerMovementSystem(Player);
             GeneralSystems.FourDirectionSystem(FourDirectionSpriteGroup, gameTimer);
             GeneralSystems.MovementSystem(MovementGroup);
+            AISystems.GuardAISystem(GuardGroup, Player);
             AISystems.PathingSystem(PathingGroup, Pathfinder);
-            AISystems.MovementSystem(MovementGroup);
+            AISystems.MovementSystem(MovementGroup, gameTimer);
             AISystems.AreaSoundSystem(AreaSounds, gameTimer);
             GeneralSystems.PhysicsSystem(PhysicsGroup, gameTimer);
             GeneralSystems.VisionSystem(Player, Tilemap, GuardVisibleGroup);

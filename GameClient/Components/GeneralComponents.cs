@@ -79,7 +79,7 @@ namespace VagabondRL
 
     public struct TilemapComponent
     {
-        public AStarGridGraph Graph;
+        public MansionGridGraph Graph;
         public TimemapLayer[] Layers;
         public CollisionType[] Collisions;
         public bool[] Expored;

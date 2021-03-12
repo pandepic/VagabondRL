@@ -29,8 +29,6 @@ namespace VagabondRL
             {
                 ref var transform = ref entity.GetComponent<TransformComponent>();
                 ref var movement = ref entity.GetComponent<MovementComponent>();
-                ref var physics = ref entity.GetComponent<PhysicsComponent>();
-
 
                 // Has the entity exhausted its current movement path?
                 if (movement.MovementPath.Count == 0)

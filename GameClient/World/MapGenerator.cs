@@ -306,6 +306,13 @@ namespace VagabondRL
                 tilemapComponent.Layers[0].Tiles[index] = 1;
             }
 
+
+            tilemapComponent.Graph = new MansionGridGraph(
+                tilemapComponent.Width, 
+                tilemapComponent.Height, 
+                tilemapComponent.Collisions
+            );
+
         } // GenerateMap
     }
 }
