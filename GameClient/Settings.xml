@@ -22,7 +22,8 @@
     <Setting Name="MoveUpRight" Value="Keypad9" Type="Keyboard" />
     <Setting Name="MoveDownLeft" Value="Keypad1" Type="Keyboard" />
     <Setting Name="MoveDownRight" Value="Keypad3" Type="Keyboard" />
-    
+
+    <Setting Name="ToggleDebug" Value="LControl" Type="Keyboard" />
     <Setting Name="PassTurn" Value="Space" Type="Keyboard" />
     <Setting Name="SaveGame" Value="LControl+S" Type="Keyboard" />
 

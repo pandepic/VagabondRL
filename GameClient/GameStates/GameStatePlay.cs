@@ -36,6 +36,7 @@ namespace VagabondRL
         };
 
         public Texture2D TileAtlas;
+        public bool ShowDebug;
 
         // AI
         public MapGenerator MapGenerator;
@@ -63,7 +64,7 @@ namespace VagabondRL
             SpriteBatch = new SpriteBatch2D();
             Camera = new Camera2D(new Rectangle(0, 0, Game.Window.Width, Game.Window.Height));
             Camera.Zoom = 2;
-            
+
             Registry = new Registry();
             DrawableGroup = Registry.RegisterGroup<TransformComponent, DrawableComponent>();
             MovementGroup = Registry.RegisterGroup<TransformComponent, MovementComponent>();
@@ -134,14 +135,36 @@ namespace VagabondRL
         {
             ref var tilemapComponent = ref Tilemap.GetComponent<TilemapComponent>();
 
-            // map gen testing
-            //PrimitiveBatch.Begin(SamplerType.Point, Camera.GetViewMatrix());
+            if (ShowDebug)
+            {
+                PrimitiveBatch.Begin(SamplerType.Point, Camera.GetViewMatrix());
 
-            //PrimitiveBatch.DrawEmptyCircle(
-            //    Player.GetComponent<TransformComponent>().TransformedPosition.ToVector2I(),
-            //    (float)(MapGenerator.TileSize.X * Player.GetComponent<VisionComponent>().Range), RgbaFloat.Red);
+                for (var y = 0; y < tilemapComponent.Height; y++)
+                {
+                    for (var x = 0; x < tilemapComponent.Width; x++)
+                    {
+                        var index = x + tilemapComponent.Width * y;
 
-            //PrimitiveBatch.End();
+                        if (tilemapComponent.Layers[0].Tiles[index] <= 0)
+                            continue;
+
+                        PrimitiveBatch.DrawFilledRect(new Rectangle(new Vector2I(x, y) * MapGenerator.TileSize, MapGenerator.TileSize), RgbaFloat.Red);
+                    }
+                }
+
+                foreach (var entity in GuardVisibleGroup.Entities)
+                {
+                    ref var transform = ref entity.GetComponent<TransformComponent>();
+                    var guardRect = new Rectangle(transform.Position.ToVector2I(), new Vector2I(MapGenerator.TileSize.X, MapGenerator.TileSize.Y * 2));
+                    PrimitiveBatch.DrawFilledRect(guardRect, RgbaFloat.Blue);
+                }
+
+                //PrimitiveBatch.DrawEmptyCircle(
+                //    Player.GetComponent<TransformComponent>().TransformedPosition.ToVector2I(),
+                //    (float)(MapGenerator.TileSize.X * Player.GetComponent<VisionComponent>().Range), RgbaFloat.Red);
+
+                PrimitiveBatch.End();
+            }
 
             var floorSourceRect = new Rectangle(16, 48, 16, 16);
             var wallSourceRect = new Rectangle(16, 112, 16, 16);
@@ -229,6 +252,11 @@ namespace VagabondRL
 
                         Camera.Zoom = _zoomLevels[_zoomIndex];
                     }
+                    break;
+
+                case "ToggleDebug":
+                    if (state == GameControlState.Released)
+                        ShowDebug = !ShowDebug;
                     break;
             }
         }
