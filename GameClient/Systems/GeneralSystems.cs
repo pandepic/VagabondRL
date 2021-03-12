@@ -35,6 +35,9 @@ namespace VagabondRL
                 ref var drawable = ref entity.GetComponent<DrawableComponent>();
                 ref var transform = ref entity.GetComponent<TransformComponent>();
 
+                if (!drawable.IsVisible)
+                    continue;
+
                 Vector2I Pos = transform.TransformedPosition - drawable.Origin;
                 Vector2I Size = drawable.AtlasRect.Size;
                 var entityRect = new Rectangle(Pos, Size);
@@ -51,7 +54,7 @@ namespace VagabondRL
                         Texture = drawable.Texture,
                         Layer = drawable.Layer,
                     });
-                }            
+                }
             }
 
             if (_drawList.Count > 0)
@@ -148,7 +151,93 @@ namespace VagabondRL
 
         }
 
+        private static List<Vector2I> _visionList = new List<Vector2I>();
+
+        public static void VisionSystem(Entity player, Entity tilemap, Group guards)
+        {
+            ref var vision = ref player.GetComponent<VisionComponent>();
+            ref var transform = ref player.GetComponent<TransformComponent>();
+            ref var tilemapComponent = ref tilemap.GetComponent<TilemapComponent>();
+            var playerTile = transform.TransformedPosition.ToVector2I() / MapGenerator.TileSize;
+
+            foreach (var guard in guards.Entities)
+            {
+                ref var guardTransform = ref guard.GetComponent<TransformComponent>();
+                ref var guardDrawable = ref guard.GetComponent<DrawableComponent>();
+
+                guardDrawable.IsVisible = false;
+
+                var guardTile = guardTransform.TransformedPosition.ToVector2I() / MapGenerator.TileSize;
+
+                if (Vector2I.GetDistance(playerTile, guardTile) > vision.Range)
+                    continue;
+
+                var lineTiles = Bresenham.GetLinePoints(playerTile, guardTile);
+                lineTiles.Sort((t1, t2) => Vector2I.GetDistance(playerTile, t1).CompareTo(Vector2I.GetDistance(playerTile, t2)));
+
+                var blocked = false;
+
+                foreach (var tile in lineTiles)
+                {
+                    // check if tile is out of bounds
+                    if (tile.X < 0 || tile.X >= tilemapComponent.Width
+                        || tile.Y < 0 || tile.Y >= tilemapComponent.Height)
+                    {
+                        continue;
+                    }
+
+                    var index = tile.X + tilemapComponent.Width * tile.Y;
+                    if (tilemapComponent.Collisions[index] == CollisionType.Blocked)
+                        blocked = true;
+                }
+
+                guardDrawable.IsVisible = !blocked;
+            }
+
+            for (var i = 0; i < tilemapComponent.Visible.Length; i++)
+                tilemapComponent.Visible[i] = false;
+
+            var pointCount = 200;
+
+            for (var i = 0f; i < 2 * MathF.PI; i += 2 * MathF.PI / pointCount)
+            {
+                var targetTile = new Vector2I(MathF.Cos(i) * vision.Range + playerTile.X, MathF.Sin(i) * vision.Range + playerTile.Y);
+
+                var lineTiles = Bresenham.GetLinePoints(playerTile, targetTile);
+                var blocked = false;
+
+                lineTiles.Sort((t1, t2) => Vector2I.GetDistance(playerTile, t1).CompareTo(Vector2I.GetDistance(playerTile, t2)));
+
+                _visionList.Clear();
+
+                foreach (var tile in lineTiles)
+                {
+                    // check if tile is out of bounds
+                    if (tile.X < 0 || tile.X >= tilemapComponent.Width
+                        || tile.Y < 0 || tile.Y >= tilemapComponent.Height)
+                    {
+                        continue;
+                    }
+
+                    if (blocked)
+                        continue;
+
+                    _visionList.Add(tile);
+
+                    var index = tile.X + tilemapComponent.Width * tile.Y;
+                    if (tilemapComponent.Collisions[index] == CollisionType.Blocked)
+                        blocked = true;
+                }
+
+                foreach (var tile in _visionList)
+                {
+                    var index = tile.X + tilemapComponent.Width * tile.Y;
+                    tilemapComponent.Expored[index] = true;
+                    tilemapComponent.Visible[index] = true;
+                }
+            }
+
+        } // VisionSystem
+
     } // GeneralSystems
-
-
 }
