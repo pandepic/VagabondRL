@@ -114,6 +114,12 @@ namespace VagabondRL
 
             foreach (var check in _collisionCheckList)
             {
+                if (check.X < 0 || check.X >= tilemapComponent.Width
+                    || check.Y < 0 || check.Y >= tilemapComponent.Height)
+                {
+                    return true;
+                }
+
                 var index = check.X + tilemapComponent.Width * check.Y;
 
                 if (tilemapComponent.Collisions[index] == CollisionType.Blocked)

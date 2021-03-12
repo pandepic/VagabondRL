@@ -19,7 +19,10 @@ namespace VagabondRL
 
         public override bool IsNodeBlocked(AStarNode node, Vector2I end)
         {
-            int Index = node.Position.X * Width + node.Position.Y;
+            if (node == null)
+                return true;
+
+            int Index = node.Position.X + Width * node.Position.Y;
             return Index >= Collisions.Length || 
                 node == null ||
                 Collisions[Index] == CollisionType.Blocked;

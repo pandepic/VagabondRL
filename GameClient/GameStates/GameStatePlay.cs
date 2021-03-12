@@ -37,6 +37,7 @@ namespace VagabondRL
 
         public Texture2D TileAtlas;
         public bool ShowDebug;
+        public List<AStarPathResult> TestPathingList = new List<AStarPathResult>();
 
         // AI
         public MapGenerator MapGenerator;
@@ -69,7 +70,7 @@ namespace VagabondRL
             Registry = new Registry();
             DrawableGroup = Registry.RegisterGroup<TransformComponent, DrawableComponent>();
             MovementGroup = Registry.RegisterGroup<TransformComponent, MovementComponent>();
-            PathingGroup = Registry.RegisterGroup<TransformComponent, MovementComponent>();
+            PathingGroup = Registry.RegisterGroup<TransformComponent, MovementComponent, GuardComponent>();
             PhysicsGroup = Registry.RegisterGroup<TransformComponent, PhysicsComponent>();
             FourDirectionSpriteGroup = Registry.RegisterGroup<FourDirectionComponent, PhysicsComponent, DrawableComponent>();
             GuardVisibleGroup = Registry.RegisterGroup<GuardComponent, TransformComponent, DrawableComponent>();
@@ -140,37 +141,6 @@ namespace VagabondRL
         {
             ref var tilemapComponent = ref Tilemap.GetComponent<TilemapComponent>();
 
-            if (ShowDebug)
-            {
-                PrimitiveBatch.Begin(SamplerType.Point, Camera.GetViewMatrix());
-
-                for (var y = 0; y < tilemapComponent.Height; y++)
-                {
-                    for (var x = 0; x < tilemapComponent.Width; x++)
-                    {
-                        var index = x + tilemapComponent.Width * y;
-
-                        if (tilemapComponent.Layers[0].Tiles[index] <= 0)
-                            continue;
-
-                        PrimitiveBatch.DrawFilledRect(new Rectangle(new Vector2I(x, y) * MapGenerator.TileSize, MapGenerator.TileSize), RgbaFloat.Red);
-                    }
-                }
-
-                foreach (var entity in GuardVisibleGroup.Entities)
-                {
-                    ref var transform = ref entity.GetComponent<TransformComponent>();
-                    var guardRect = new Rectangle(transform.Position.ToVector2I(), new Vector2I(MapGenerator.TileSize.X, MapGenerator.TileSize.Y * 2));
-                    PrimitiveBatch.DrawFilledRect(guardRect, RgbaFloat.Blue);
-                }
-
-                //PrimitiveBatch.DrawEmptyCircle(
-                //    Player.GetComponent<TransformComponent>().TransformedPosition.ToVector2I(),
-                //    (float)(MapGenerator.TileSize.X * Player.GetComponent<VisionComponent>().Range), RgbaFloat.Red);
-
-                PrimitiveBatch.End();
-            }
-
             var floorSourceRect = new Rectangle(16, 48, 16, 16);
             var wallSourceRect = new Rectangle(16, 112, 16, 16);
 
@@ -202,6 +172,43 @@ namespace VagabondRL
 
             GeneralSystems.DrawableSystem(DrawableGroup, SpriteBatch, Camera);
             SpriteBatch.End();
+
+            if (ShowDebug)
+            {
+                PrimitiveBatch.Begin(SamplerType.Point, Camera.GetViewMatrix());
+
+                for (var y = 0; y < tilemapComponent.Height; y++)
+                {
+                    for (var x = 0; x < tilemapComponent.Width; x++)
+                    {
+                        var index = x + tilemapComponent.Width * y;
+
+                        if (tilemapComponent.Layers[0].Tiles[index] <= 0)
+                            continue;
+
+                        PrimitiveBatch.DrawFilledRect(new Rectangle(new Vector2I(x, y) * MapGenerator.TileSize, MapGenerator.TileSize), RgbaFloat.Red);
+                    }
+                }
+
+                foreach (var entity in GuardVisibleGroup.Entities)
+                {
+                    ref var transform = ref entity.GetComponent<TransformComponent>();
+                    var guardRect = new Rectangle(transform.Position.ToVector2I(), new Vector2I(MapGenerator.TileSize.X, MapGenerator.TileSize.Y * 2));
+                    PrimitiveBatch.DrawFilledRect(guardRect, RgbaFloat.Blue);
+                }
+
+                //PrimitiveBatch.DrawEmptyCircle(
+                //    Player.GetComponent<TransformComponent>().TransformedPosition.ToVector2I(),
+                //    (float)(MapGenerator.TileSize.X * Player.GetComponent<VisionComponent>().Range), RgbaFloat.Red);
+
+                foreach (var listResult in TestPathingList)
+                {
+                    var rect = new Rectangle(listResult.Position * MapGenerator.TileSize, MapGenerator.TileSize);
+                    PrimitiveBatch.DrawFilledRect(rect, RgbaFloat.Green);
+                }
+
+                PrimitiveBatch.End();
+            }
 
             // screen space (UI)
             SpriteBatch.Begin(SamplerType.Point);
@@ -276,6 +283,28 @@ namespace VagabondRL
 
                 _dragMousePosition = mousePosition;
             }
+        }
+
+        public override void HandleMouseButtonReleased(Vector2 mousePosition, MouseButton button, GameTimer gameTimer)
+        {
+            //if (button == MouseButton.Right)
+            //{
+            //    var mouseWorldPos = Camera.ScreenToWorld(InputManager.MousePosition);
+            //    var mouseTile = mouseWorldPos.ToVector2I() / MapGenerator.TileSize;
+            //    ref var transform = ref Player.GetComponent<TransformComponent>();
+            //    var playerTile = transform.TransformedPosition.ToVector2I() / MapGenerator.TileSize;
+
+            //    var result = Pathfinder.GetPath(playerTile, mouseTile, out var path);
+            //    if (path != null)
+            //        Console.WriteLine(path.Count);
+
+            //    Console.WriteLine(playerTile.ToString() + " - " + mouseTile.ToString() + " - " + result.ToString());
+
+            //    if (result == AStarPathResultType.Success)
+            //    {
+            //        TestPathingList = new List<AStarPathResult>(path);
+            //    }
+            //}
         }
 
     } // GameStatePlay

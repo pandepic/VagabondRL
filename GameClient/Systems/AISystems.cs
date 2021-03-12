@@ -38,12 +38,12 @@ namespace VagabondRL
                     Vector2 TilePosition = transform.Position / 16;
                     Vector2 DestinationTilePosition = movement.Destination / 16;
 
-                    AStarPathResultType Result =
-                        pathfinder.GetPath(TilePosition, DestinationTilePosition, out Path);
+                    //AStarPathResultType Result =
+                    //    pathfinder.GetPath(TilePosition, DestinationTilePosition, out Path);
 
-                    if (Result == AStarPathResultType.Success)
-                        foreach (AStarPathResult result in Path)
-                            movement.MovementPath.Add(result.Position);
+                    //if (Result == AStarPathResultType.Success)
+                    //    foreach (AStarPathResult result in Path)
+                    //        movement.MovementPath.Add(result.Position);
                 }
 
             }
