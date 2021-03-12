@@ -120,7 +120,7 @@ namespace VagabondRL
             AISystems.PathingSystem(PathingGroup, Pathfinder);
             AISystems.MovementSystem(MovementGroup);
             AISystems.AreaSoundSystem(AreaSounds, gameTimer);
-            GeneralSystems.PhysicsSystem(PhysicsGroup, gameTimer);
+            GeneralSystems.PhysicsSystem(PhysicsGroup, gameTimer, Tilemap);
             GeneralSystems.VisionSystem(Player, Tilemap, GuardVisibleGroup);
 
             // process queues for removing entities and components etc.

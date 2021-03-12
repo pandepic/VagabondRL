@@ -76,6 +76,7 @@ namespace VagabondRL
             {
                 Range = 10,
             });
+            player.TryAddComponent(new ColliderComponent());
 
             return player;
         }
@@ -100,6 +101,7 @@ namespace VagabondRL
             guard.TryAddComponent(new GuardStateComponent());
             guard.TryAddComponent(new GuardSensesComponent());
             guard.TryAddComponent(new GuardMemoryComponent());
+            guard.TryAddComponent(new ColliderComponent());
 
             return guard;
         }

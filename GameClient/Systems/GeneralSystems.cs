@@ -76,6 +76,15 @@ namespace VagabondRL
 
         } // DrawableSystem
 
+        private static Vector2I GetEntityTile(Entity player)
+        {
+            ref var transform = ref player.GetComponent<TransformComponent>();
+            var playerTile = transform.TransformedPosition.ToVector2I() / MapGenerator.TileSize;
+            playerTile.Y += 1;
+
+            return playerTile;
+        }
+
         public static void MovementSystem(Group group)
         {
             foreach (var entity in group.Entities)
@@ -91,8 +100,33 @@ namespace VagabondRL
             }
         } // MovementSystem
 
-        public static void PhysicsSystem(Group group, GameTimer gameTimer)
+        private static List<Vector2I> _collisionCheckList = new List<Vector2I>();
+
+        private static bool CheckCollisions(TransformComponent transform, TilemapComponent tilemapComponent)
         {
+            var entityRect = new Rectangle(transform.Position.ToVector2I() + new Vector2I(0, MapGenerator.TileSize.Y), MapGenerator.TileSize);
+
+            _collisionCheckList.Clear();
+            _collisionCheckList.Add(entityRect.Location / MapGenerator.TileSize);
+            _collisionCheckList.Add(entityRect.TopRight / MapGenerator.TileSize);
+            _collisionCheckList.Add(entityRect.BottomLeft / MapGenerator.TileSize);
+            _collisionCheckList.Add(entityRect.BottomRight / MapGenerator.TileSize);
+
+            foreach (var check in _collisionCheckList)
+            {
+                var index = check.X + tilemapComponent.Width * check.Y;
+
+                if (tilemapComponent.Collisions[index] == CollisionType.Blocked)
+                    return true;
+            }
+
+            return false;
+        }
+
+        public static void PhysicsSystem(Group group, GameTimer gameTimer, Entity tilemap)
+        {
+            ref var tilemapComponent = ref tilemap.GetComponent<TilemapComponent>();
+
             foreach (var entity in group.Entities)
             {
                 ref var transform = ref entity.GetComponent<TransformComponent>();
@@ -101,7 +135,23 @@ namespace VagabondRL
                 if (physics.Velocity == Vector2.Zero)
                     continue;
 
-                transform.Position += physics.Velocity * gameTimer.DeltaS;
+                var prevPosition = transform.Position;
+                transform.Position.X += physics.Velocity.X * gameTimer.DeltaS;
+
+                if (entity.HasComponent<ColliderComponent>())
+                {
+                    if (CheckCollisions(transform, tilemapComponent))
+                        transform.Position = prevPosition;
+                }
+
+                prevPosition = transform.Position;
+                transform.Position.Y += physics.Velocity.Y * gameTimer.DeltaS;
+
+                if (entity.HasComponent<ColliderComponent>())
+                {
+                    if (CheckCollisions(transform, tilemapComponent))
+                        transform.Position = prevPosition;
+                }
             }
         }
 
@@ -148,7 +198,6 @@ namespace VagabondRL
                 drawable.AtlasRect.X = four.CurrentFrame * 16;
 
             }
-
         }
 
         private static List<Vector2I> _visionList = new List<Vector2I>();
@@ -158,7 +207,8 @@ namespace VagabondRL
             ref var vision = ref player.GetComponent<VisionComponent>();
             ref var transform = ref player.GetComponent<TransformComponent>();
             ref var tilemapComponent = ref tilemap.GetComponent<TilemapComponent>();
-            var playerTile = transform.TransformedPosition.ToVector2I() / MapGenerator.TileSize;
+
+            var playerTile = GetEntityTile(player);
 
             foreach (var guard in guards.Entities)
             {
