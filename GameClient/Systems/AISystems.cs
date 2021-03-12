@@ -34,7 +34,7 @@ namespace VagabondRL
                 if (movement.MovementPath.Count == 0)
                 {
                     // Populate movement component with new path
-                    List<AStarPathResult> Path;
+                    List<AStarPathResult> Path = new List<AStarPathResult>();
                     if (pathfinder.GetPath(transform.Position, movement.Destination, out Path) ==
                         AStarPathResultType.Success)
                         foreach (AStarPathResult result in Path)
@@ -52,25 +52,29 @@ namespace VagabondRL
                 ref var transform = ref entity.GetComponent<TransformComponent>();
                 ref var physics = ref entity.GetComponent<PhysicsComponent>();
 
-                Vector2 ToTarget = movement.CurrentTarget - movement.PreviousTarget;
-                Vector2 ToTargetDir = Vector2.Normalize(ToTarget);
-                float Distance = ToTarget.Length();
-                Vector2 Traveled = transform.Position - movement.PreviousTarget;
-                float DistanceTraveled = Traveled.Length();
-
-                // for Linear Interpolation
-                float T = Distance / DistanceTraveled;
-
-                // Not yet reached destination
-                if (T < 1.0f)
+                if (movement.MovementPath.Count > 0)
                 {
-                    physics.Velocity = ToTarget * physics.Speed;
+                    Vector2 ToTarget = movement.CurrentTarget - movement.PreviousTarget;
+                    Vector2 ToTargetDir = Vector2.Normalize(ToTarget);
+                    float Distance = ToTarget.Length();
+                    Vector2 Traveled = transform.Position - movement.PreviousTarget;
+                    float DistanceTraveled = Traveled.Length();
+
+                    // for Linear Interpolation
+                    float T = Distance / DistanceTraveled;
+
+                    // Not yet reached destination
+                    if (T < 1.0f)
+                    {
+                        physics.Velocity = ToTarget * physics.Speed;
+                    }
+                    // reached destination
+                    else
+                    {
+                        movement.CurrentTargetIndex += 1;
+                    }
                 }
-                // reached destination
-                else
-                {
-                    movement.CurrentTargetIndex += 1;
-                }
+               
 
             }
         }

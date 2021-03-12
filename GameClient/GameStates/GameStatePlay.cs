@@ -81,13 +81,15 @@ namespace VagabondRL
 
             ref var tilemapComponent = ref Tilemap.GetComponent<TilemapComponent>();
 
+            MapGenerator = new MapGenerator(Tilemap);
+            MapGenerator.GenerateMap();
+
             EntityBuilder = new EntityBuilder(Registry);
             Pathfinder = new AStarPathfinder(tilemapComponent.Graph);
 
             Player = EntityBuilder.CreatePlayer(new Vector2I());
 
-            MapGenerator = new MapGenerator(Tilemap);
-            MapGenerator.GenerateMap();
+
 
             AreaSounds = new AreaSoundsManager();
             ref var playerTransform = ref Player.GetComponent<TransformComponent>();

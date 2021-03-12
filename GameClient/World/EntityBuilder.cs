@@ -96,6 +96,13 @@ namespace VagabondRL
                 Layer = (int)LayerType.Guard,
                 Scale = new Vector2(1f),
             });
+            guard.TryAddComponent(new MovementComponent()
+            {
+                CurrentTargetIndex = 0,
+                MovementPath = new List<Vector2>(),
+                Start = Vector2.Zero,
+                Destination = Vector2.Zero
+            });
             guard.TryAddComponent(new FourDirectionComponent());
 
             guard.TryAddComponent(new GuardStateComponent());
