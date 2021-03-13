@@ -302,7 +302,8 @@ namespace VagabondRL
 
             //    if (result == AStarPathResultType.Success)
             //    {
-            //        TestPathingList = new List<AStarPathResult>(path);
+            //        TestPathingList.Clear();
+            //        TestPathingList.AddRange(path);
             //    }
             //}
         }
