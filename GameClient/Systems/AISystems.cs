@@ -42,8 +42,12 @@ namespace VagabondRL
                         pathfinder.GetPath(TilePosition, DestinationTilePosition, out Path);
 
                     if (Result == AStarPathResultType.Success)
-                        foreach (AStarPathResult result in Path)
-                            movement.MovementPath.Add(result.Position * 16);
+                    {
+                        for (int i = Path.Count - 1; i >= 0; i--)
+                            movement.MovementPath.Add(Path[i].Position * 16);
+                            
+                        movement.Start = transform.Position;
+                    }
                 }
 
             }
@@ -67,7 +71,7 @@ namespace VagabondRL
                     float DistanceTraveled = Traveled.Length();
 
                     // for Linear Interpolation
-                    float T = Distance / DistanceTraveled;
+                    float T = DistanceTraveled / Distance;
 
                     // Not yet reached destination
                     if (T < 1.0f)

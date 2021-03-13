@@ -13,8 +13,6 @@ namespace VagabondRL
     {
         public static void ControllerMovementSystem(Entity player)
         {
-
-
             ref var physics = ref player.GetComponent<PhysicsComponent>();
 
             Vector2 MovementVelocity = new Vector2();

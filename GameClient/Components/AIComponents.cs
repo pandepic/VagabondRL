@@ -48,7 +48,7 @@ namespace VagabondRL
         public Vector2 CurrentTarget => MovementPath[CurrentTargetIndex];
         public Vector2 PreviousTarget
             => (CurrentTargetIndex > 0) ?
-                MovementPath[CurrentTargetIndex] :
+                MovementPath[CurrentTargetIndex - 1] :
                 Start;
         public Vector2 ToCurrentTarget => CurrentTarget - PreviousTarget;
     }
