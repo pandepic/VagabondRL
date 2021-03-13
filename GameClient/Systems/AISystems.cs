@@ -11,16 +11,27 @@ namespace VagabondRL
 {
     public static class AISystems
     {
-        public static void GuardAISystem(Group group, Entity player)
+        public static float AIUpdateRate = 2.0f;
+        public static float AITimer = 0.0f;
+
+        public static void GuardAISystem(Group group, Entity player, GameTimer gameTimer)
         {
-            ref var playerTransform = ref player.GetComponent<TransformComponent>();
-
-            foreach (var entity in group.Entities)
+            AITimer += gameTimer.DeltaMS;
+            if (AITimer > AIUpdateRate)
             {
-                ref var movement = ref entity.GetComponent<MovementComponent>();
+                AITimer -= AIUpdateRate;
 
-                movement.Destination = playerTransform.Position;
+                ref var playerTransform = ref player.GetComponent<TransformComponent>();
+
+                foreach (var entity in group.Entities)
+                {
+                    ref var movement = ref entity.GetComponent<MovementComponent>();
+
+                    movement.Destination = playerTransform.Position;
+                }
             }
+
+
         }
 
         public static void PathingSystem(Group group, AStarPathfinder pathfinder)

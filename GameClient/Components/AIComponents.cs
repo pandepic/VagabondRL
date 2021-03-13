@@ -9,7 +9,10 @@ namespace VagabondRL
 {
     // empty tag components to filter between entity types
     public struct PlayerComponent { }
-    public struct GuardComponent { }
+    public struct GuardComponent 
+    {
+
+    }
 
     public struct GuardStateComponent
     {

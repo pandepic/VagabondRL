@@ -123,7 +123,7 @@ namespace VagabondRL
             PlayerSystems.ControllerMovementSystem(Player);
 
             //GeneralSystems.MovementSystem(MovementGroup);
-            AISystems.GuardAISystem(GuardGroup, Player);
+            AISystems.GuardAISystem(GuardGroup, Player, gameTimer);
             AISystems.PathingSystem(PathingGroup, Pathfinder);
             AISystems.MovementSystem(MovementGroup, gameTimer);
             AISystems.AreaSoundSystem(AreaSounds, gameTimer);

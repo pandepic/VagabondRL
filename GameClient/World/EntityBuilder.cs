@@ -85,7 +85,11 @@ namespace VagabondRL
         public Entity CreateGuard(Vector2I position)
         {
             var guard = Registry.CreateEntity();
-            guard.TryAddComponent(new GuardComponent());
+            guard.TryAddComponent(new GuardComponent()
+            { 
+                
+            
+            });
             guard.TryAddComponent(new TransformComponent()
             {
                 Position = position,
