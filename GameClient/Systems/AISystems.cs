@@ -31,19 +31,19 @@ namespace VagabondRL
                 ref var movement = ref entity.GetComponent<MovementComponent>();
 
                 // Has the entity exhausted its current movement path?
-                if (movement.MovementPath.Count == 0)
+                if (movement.MovementPath.Count == 0 && movement.Destination != Vector2.Zero)
                 {
                     // Populate movement component with new path
                     List<AStarPathResult> Path = new List<AStarPathResult>();
                     Vector2 TilePosition = transform.Position / 16;
                     Vector2 DestinationTilePosition = movement.Destination / 16;
 
-                    //AStarPathResultType Result =
-                    //    pathfinder.GetPath(TilePosition, DestinationTilePosition, out Path);
+                    AStarPathResultType Result =
+                        pathfinder.GetPath(TilePosition, DestinationTilePosition, out Path);
 
-                    //if (Result == AStarPathResultType.Success)
-                    //    foreach (AStarPathResult result in Path)
-                    //        movement.MovementPath.Add(result.Position);
+                    if (Result == AStarPathResultType.Success)
+                        foreach (AStarPathResult result in Path)
+                            movement.MovementPath.Add(result.Position * 16);
                 }
 
             }
@@ -57,7 +57,8 @@ namespace VagabondRL
                 ref var transform = ref entity.GetComponent<TransformComponent>();
                 ref var physics = ref entity.GetComponent<PhysicsComponent>();
 
-                if (movement.MovementPath.Count > 0)
+                if (movement.MovementPath.Count > 0 && 
+                    movement.CurrentTargetIndex < movement.MovementPath.Count)
                 {
                     Vector2 ToTarget = movement.CurrentTarget - movement.PreviousTarget;
                     Vector2 ToTargetDir = Vector2.Normalize(ToTarget);
@@ -71,13 +72,21 @@ namespace VagabondRL
                     // Not yet reached destination
                     if (T < 1.0f)
                     {
-                        physics.Velocity = ToTarget * physics.Speed;
+                        physics.Velocity = ToTargetDir * physics.Speed;
                     }
                     // reached destination
                     else
                     {
                         movement.CurrentTargetIndex += 1;
                     }
+                }
+                else
+                {
+                    movement.MovementPath.Clear();
+                    movement.CurrentTargetIndex = 0;
+                    movement.Destination = Vector2.Zero;
+                    physics.Velocity = Vector2.Zero;
+
                 }
                
 

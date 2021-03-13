@@ -70,6 +70,7 @@ namespace VagabondRL
             });
             player.TryAddComponent(new PhysicsComponent()
             {
+                Velocity = Vector2.Zero,
                 Speed = 50f,
             });
             player.TryAddComponent(new VisionComponent()

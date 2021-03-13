@@ -69,7 +69,7 @@ namespace VagabondRL
 
             Registry = new Registry();
             DrawableGroup = Registry.RegisterGroup<TransformComponent, DrawableComponent>();
-            MovementGroup = Registry.RegisterGroup<TransformComponent, MovementComponent>();
+            MovementGroup = Registry.RegisterGroup<TransformComponent, MovementComponent, GuardComponent>();
             PathingGroup = Registry.RegisterGroup<TransformComponent, MovementComponent, GuardComponent>();
             PhysicsGroup = Registry.RegisterGroup<TransformComponent, PhysicsComponent>();
             FourDirectionSpriteGroup = Registry.RegisterGroup<FourDirectionComponent, PhysicsComponent, DrawableComponent>();
@@ -121,14 +121,15 @@ namespace VagabondRL
         {
             // Player
             PlayerSystems.ControllerMovementSystem(Player);
-            GeneralSystems.FourDirectionSystem(FourDirectionSpriteGroup, gameTimer);
-            GeneralSystems.MovementSystem(MovementGroup);
+
+            //GeneralSystems.MovementSystem(MovementGroup);
             AISystems.GuardAISystem(GuardGroup, Player);
             AISystems.PathingSystem(PathingGroup, Pathfinder);
             AISystems.MovementSystem(MovementGroup, gameTimer);
             AISystems.AreaSoundSystem(AreaSounds, gameTimer);
             GeneralSystems.PhysicsSystem(PhysicsGroup, gameTimer, Tilemap);
             GeneralSystems.VisionSystem(Player, Tilemap, GuardVisibleGroup);
+            GeneralSystems.FourDirectionSystem(FourDirectionSpriteGroup, gameTimer);
 
             // process queues for removing entities and components etc.
             Registry.SystemsFinished();
