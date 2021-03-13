@@ -85,20 +85,20 @@ namespace VagabondRL
             return playerTile;
         }
 
-        public static void MovementSystem(Group group)
-        {
-            foreach (var entity in group.Entities)
-            {
-                ref var transform = ref entity.GetComponent<TransformComponent>();
-                ref var movement = ref entity.GetComponent<MovementComponent>();
+        //public static void MovementSystem(Group group)
+        //{
+        //    foreach (var entity in group.Entities)
+        //    {
+        //        ref var transform = ref entity.GetComponent<TransformComponent>();
+        //        ref var movement = ref entity.GetComponent<MovementComponent>();
 
-                if (movement.MovementPath.Count > 0)
-                {
-                    transform.Position += movement.MovementPath.GetLastItem();
-                    movement.MovementPath.RemoveLastItem();
-                }
-            }
-        } // MovementSystem
+        //        if (movement.MovementPath.Count > 0)
+        //        {
+        //            transform.Position += movement.MovementPath.GetLastItem();
+        //            movement.MovementPath.RemoveLastItem();
+        //        }
+        //    }
+        //} // MovementSystem
 
         private static List<Vector2I> _collisionCheckList = new List<Vector2I>();
 
@@ -140,6 +140,8 @@ namespace VagabondRL
 
                 if (physics.Velocity == Vector2.Zero)
                     continue;
+
+                transform.Position += physics.Velocity * gameTimer.DeltaS;
 
                 var prevPosition = transform.Position;
                 transform.Position.X += physics.Velocity.X * gameTimer.DeltaS;
