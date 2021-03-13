@@ -57,7 +57,7 @@ namespace VagabondRL
                 ref var transform = ref entity.GetComponent<TransformComponent>();
                 ref var physics = ref entity.GetComponent<PhysicsComponent>();
 
-                if (movement.MovementPath.Count > 0 && 
+                if (movement.MovementPath.Count > 0 &&
                     movement.CurrentTargetIndex < movement.MovementPath.Count)
                 {
                     Vector2 ToTarget = movement.CurrentTarget - movement.PreviousTarget;
@@ -88,7 +88,7 @@ namespace VagabondRL
                     physics.Velocity = Vector2.Zero;
 
                 }
-               
+
 
             }
         }

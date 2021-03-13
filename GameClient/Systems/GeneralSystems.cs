@@ -141,8 +141,6 @@ namespace VagabondRL
                 if (physics.Velocity == Vector2.Zero)
                     continue;
 
-                transform.Position += physics.Velocity * gameTimer.DeltaS;
-
                 var prevPosition = transform.Position;
                 transform.Position.X += physics.Velocity.X * gameTimer.DeltaS;
 

@@ -111,6 +111,12 @@ namespace VagabondRL
             guard.TryAddComponent(new GuardMemoryComponent());
             guard.TryAddComponent(new ColliderComponent());
 
+            guard.TryAddComponent(new PhysicsComponent()
+            {
+                Velocity = Vector2.Zero,
+                Speed = 50f,
+            });
+
             return guard;
         }
     }
