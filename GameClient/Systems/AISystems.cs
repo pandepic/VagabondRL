@@ -18,12 +18,24 @@ namespace VagabondRL
         {
             ref var playerTransform = ref player.GetComponent<TransformComponent>();
 
-            foreach (var entity in group.Entities)
+        public static void GuardAISystem(Group group, Entity player, GameTimer gameTimer)
+        {
+            AITimer += gameTimer.DeltaMS;
+            if (AITimer > AIUpdateRate)
             {
-                ref var movement = ref entity.GetComponent<MovementComponent>();
+                AITimer -= AIUpdateRate;
 
-                movement.Destination = playerTransform.Position;
+                ref var playerTransform = ref player.GetComponent<TransformComponent>();
+
+                foreach (var entity in group.Entities)
+                {
+                    ref var movement = ref entity.GetComponent<MovementComponent>();
+
+                    movement.Destination = playerTransform.Position;
+                }
             }
+
+
         }
 
         public static void PathingSystem(Group group, AStarPathfinder pathfinder, Entity tilemap)

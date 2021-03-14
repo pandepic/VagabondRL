@@ -1,4 +1,4 @@
-﻿using ElementEngine;
+using ElementEngine;
 using ElementEngine.ECS;
 using System;
 using System.Collections.Generic;
