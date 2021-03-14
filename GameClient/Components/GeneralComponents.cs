@@ -84,10 +84,12 @@ namespace VagabondRL
         public CollisionType[] Collisions;
         public bool[] Expored;
         public bool[] Visible;
+        public int[] GuardsVisible;
         public int Width, Height;
         public string Name;
         public Vector2I PlayerSpawn;
         public Vector2I[] GuardSpawns;
+        public Vector2I[] RoomCenters;
     }
 
     public struct PhysicsComponent

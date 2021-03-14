@@ -71,7 +71,7 @@ namespace VagabondRL
             player.TryAddComponent(new PhysicsComponent()
             {
                 Velocity = Vector2.Zero,
-                Speed = 50f,
+                Speed = 60f,
             });
             player.TryAddComponent(new VisionComponent()
             {
@@ -85,7 +85,10 @@ namespace VagabondRL
         public Entity CreateGuard(Vector2I position)
         {
             var guard = Registry.CreateEntity();
-            guard.TryAddComponent(new GuardComponent());
+            guard.TryAddComponent(new GuardComponent()
+            {
+                State = GuardStateType.Patrol,
+            });
             guard.TryAddComponent(new TransformComponent()
             {
                 Position = position,
@@ -99,14 +102,11 @@ namespace VagabondRL
             });
             guard.TryAddComponent(new MovementComponent()
             {
-                CurrentTargetIndex = 0,
                 MovementPath = new List<Vector2>(),
-                Start = Vector2.Zero,
                 Destination = Vector2.Zero
             });
             guard.TryAddComponent(new FourDirectionComponent());
 
-            guard.TryAddComponent(new GuardStateComponent());
             guard.TryAddComponent(new GuardSensesComponent());
             guard.TryAddComponent(new GuardMemoryComponent());
             guard.TryAddComponent(new ColliderComponent());
@@ -114,7 +114,12 @@ namespace VagabondRL
             guard.TryAddComponent(new PhysicsComponent()
             {
                 Velocity = Vector2.Zero,
-                Speed = 50f,
+                Speed = 40f,
+            });
+
+            guard.TryAddComponent(new VisionComponent()
+            {
+                Range = 6,
             });
 
             return guard;

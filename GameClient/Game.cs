@@ -39,7 +39,7 @@ namespace VagabondRL
             SetupAssets("Mods");
             InputManager.LoadGameControls();
 
-            ClearColor = Veldrid.RgbaFloat.CornflowerBlue;
+            ClearColor = Veldrid.RgbaFloat.Black;
             Window.Resizable = false;
 
             GameStates.Add(GameStateType.Play, new GameStatePlay(this));

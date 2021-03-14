@@ -18,7 +18,6 @@ namespace VagabondRL
         public Game Game;
         public SpriteBatch2D SpriteBatch;
         public Camera2D Camera;
-        public AreaSoundsManager AreaSounds;
 
         public PrimitiveBatch PrimitiveBatch = new PrimitiveBatch();
 
@@ -38,6 +37,7 @@ namespace VagabondRL
         public Texture2D TileAtlas;
         public bool ShowDebug;
         public List<AStarPathResult> TestPathingList = new List<AStarPathResult>();
+        public static int GuardCount;
 
         // AI
         public MapGenerator MapGenerator;
@@ -81,28 +81,9 @@ namespace VagabondRL
             {
             });
 
-            ref var tilemapComponent = ref Tilemap.GetComponent<TilemapComponent>();
-
-            MapGenerator = new MapGenerator(Tilemap);
-            MapGenerator.GenerateMap();
-
-            EntityBuilder = new EntityBuilder(Registry);
-            Pathfinder = new AStarPathfinder(tilemapComponent.Graph);
-
-            Player = EntityBuilder.CreatePlayer(new Vector2I());
-
-
-
-            AreaSounds = new AreaSoundsManager();
-            ref var playerTransform = ref Player.GetComponent<TransformComponent>();
-            playerTransform.Position = tilemapComponent.PlayerSpawn + SpawnOffset;
-
-            foreach (var guardSpawn in tilemapComponent.GuardSpawns)
-            {
-                EntityBuilder.CreateGuard(guardSpawn + SpawnOffset);
-            }
-
+            GuardCount = 1;
             TileAtlas = AssetManager.LoadTexture2D("Environment.png");
+            EntityBuilder = new EntityBuilder(Registry);
         }
 
         public override void Initialize()
@@ -111,10 +92,29 @@ namespace VagabondRL
 
         public override void Load()
         {
+            GuardCount += 1;
+
+            MapGenerator = new MapGenerator(Tilemap);
+            MapGenerator.GenerateMap(GuardCount);
+
+            ref var tilemapComponent = ref Tilemap.GetComponent<TilemapComponent>();
+
+            Pathfinder = new AStarPathfinder(tilemapComponent.Graph);
+
+            Player = EntityBuilder.CreatePlayer(new Vector2I());
+
+            ref var playerTransform = ref Player.GetComponent<TransformComponent>();
+            playerTransform.Position = tilemapComponent.PlayerSpawn + SpawnOffset;
+
+            foreach (var guardSpawn in tilemapComponent.GuardSpawns)
+            {
+                EntityBuilder.CreateGuard(guardSpawn + SpawnOffset);
+            }
         }
 
         public override void Unload()
         {
+            Registry.Clear();
         }
 
         public override void Update(GameTimer gameTimer)
@@ -123,12 +123,17 @@ namespace VagabondRL
             PlayerSystems.ControllerMovementSystem(Player);
 
             //GeneralSystems.MovementSystem(MovementGroup);
-            AISystems.GuardAISystem(GuardGroup, Player);
-            AISystems.PathingSystem(PathingGroup, Pathfinder);
+            //AISystems.GuardAISystem(GuardGroup, Player);
+            //AISystems.PathingSystem(PathingGroup, Pathfinder);
+            //AISystems.MovementSystem(MovementGroup, gameTimer);
+            //AISystems.AreaSoundSystem(AreaSounds, gameTimer);
+
+            AISystems.PathingSystem(PathingGroup, Pathfinder, Tilemap);
             AISystems.MovementSystem(MovementGroup, gameTimer);
-            AISystems.AreaSoundSystem(AreaSounds, gameTimer);
+
             GeneralSystems.PhysicsSystem(PhysicsGroup, gameTimer, Tilemap);
             GeneralSystems.VisionSystem(Player, Tilemap, GuardVisibleGroup);
+            GeneralSystems.GuardVisionSystem(GuardGroup, Tilemap);
             GeneralSystems.FourDirectionSystem(FourDirectionSpriteGroup, gameTimer);
 
             // process queues for removing entities and components etc.
@@ -165,7 +170,12 @@ namespace VagabondRL
                     var tintColor = new RgbaFloat(0.3f, 0.3f, 0.3f, 0.8f);
 
                     if (tilemapComponent.Visible[index])
-                        tintColor = RgbaFloat.White;
+                    {
+                        if (tilemapComponent.GuardsVisible[index] > -1)
+                            tintColor = new RgbaFloat(0f, 1f, 0f, 0.8f);
+                        else
+                            tintColor = RgbaFloat.White;
+                    }
 
                     SpriteBatch.DrawTexture2D(TileAtlas, new Rectangle(new Vector2I(x, y) * MapGenerator.TileSize, MapGenerator.TileSize), sourceRect, color: tintColor);
                 }
@@ -194,6 +204,17 @@ namespace VagabondRL
                 foreach (var entity in GuardVisibleGroup.Entities)
                 {
                     ref var transform = ref entity.GetComponent<TransformComponent>();
+                    ref var movement = ref entity.GetComponent<MovementComponent>();
+
+                    if (movement.MovementPath.Count > 0)
+                    {
+                        foreach (var point in movement.MovementPath)
+                        {
+                            var pointRect = new Rectangle(point.ToVector2I(), MapGenerator.TileSize);
+                            PrimitiveBatch.DrawFilledRect(pointRect, RgbaFloat.Yellow);
+                        }
+                    }
+
                     var guardRect = new Rectangle(transform.Position.ToVector2I(), new Vector2I(MapGenerator.TileSize.X, MapGenerator.TileSize.Y * 2));
                     PrimitiveBatch.DrawFilledRect(guardRect, RgbaFloat.Blue);
                 }
@@ -222,12 +243,12 @@ namespace VagabondRL
 
             switch (controlName)
             {
-                case "PassTurn":
-                    if (state == GameControlState.Released)
-                    {
-                        MapGenerator.GenerateMap();
-                    }
-                    break;
+                //case "PassTurn":
+                //    if (state == GameControlState.Released)
+                //    {
+                //        MapGenerator.GenerateMap();
+                //    }
+                //    break;
 
                 //case "DragCamera":
                 //    if (state == GameControlState.Pressed)
@@ -267,10 +288,12 @@ namespace VagabondRL
                     }
                     break;
 
+#if DEBUG
                 case "ToggleDebug":
                     if (state == GameControlState.Released)
                         ShowDebug = !ShowDebug;
                     break;
+#endif
             }
         }
 

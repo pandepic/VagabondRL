@@ -83,7 +83,7 @@ namespace VagabondRL
             Tilemap = tilemap;
         }
 
-        public void GenerateMap()
+        public void GenerateMap(int guards)
         {
             ref var tilemapComponent = ref Tilemap.GetComponent<TilemapComponent>();
 
@@ -220,11 +220,23 @@ namespace VagabondRL
             tilemapComponent.Collisions = new CollisionType[mapSize.X * mapSize.Y];
             tilemapComponent.Expored = new bool[mapSize.X * mapSize.Y];
             tilemapComponent.Visible = new bool[mapSize.X * mapSize.Y];
+            tilemapComponent.GuardsVisible = new int[mapSize.X * mapSize.Y];
             tilemapComponent.Layers = new TimemapLayer[1];
             tilemapComponent.Layers[0].Tiles = new int[mapSize.X * mapSize.Y];
             tilemapComponent.PlayerSpawn = entry.Rect.Center * TileSize;
+            tilemapComponent.RoomCenters = new Vector2I[rooms.Count];
 
-            tilemapComponent.GuardSpawns = new Vector2I[rooms.Count / 3];
+            for (var i = 0; i < tilemapComponent.GuardsVisible.Length; i++)
+                tilemapComponent.GuardsVisible[i] = -1;
+
+            // use room centers as random patrol destinations
+            for (var i = 0; i < rooms.Count; i++)
+            {
+                var room = rooms[i];
+                tilemapComponent.RoomCenters[i] = room.Rect.Center;
+            }
+
+            tilemapComponent.GuardSpawns = new Vector2I[guards];
             var guardCount = 0;
 
             while (guardCount < tilemapComponent.GuardSpawns.Length)

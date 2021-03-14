@@ -17,7 +17,7 @@ namespace VagabondRL
             Collisions = collisions;
         }
 
-        public override bool IsNodeBlocked(AStarNode node, Vector2I end)
+        public override bool IsNodeBlocked(AStarNode node, Vector2I end, AStarNode parent = null)
         {
             if (node == null)
                 return true;

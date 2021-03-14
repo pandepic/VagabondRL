@@ -76,7 +76,7 @@ namespace VagabondRL
 
         } // DrawableSystem
 
-        private static Vector2I GetEntityTile(Entity player)
+        public static Vector2I GetEntityTile(Entity player)
         {
             ref var transform = ref player.GetComponent<TransformComponent>();
             var playerTile = transform.TransformedPosition.ToVector2I() / MapGenerator.TileSize;
@@ -202,7 +202,6 @@ namespace VagabondRL
                 }
 
                 drawable.AtlasRect.X = four.CurrentFrame * 16;
-
             }
         }
 
@@ -223,7 +222,7 @@ namespace VagabondRL
 
                 guardDrawable.IsVisible = false;
 
-                var guardTile = guardTransform.TransformedPosition.ToVector2I() / MapGenerator.TileSize;
+                var guardTile = GetEntityTile(guard);
 
                 if (Vector2I.GetDistance(playerTile, guardTile) > vision.Range)
                     continue;
@@ -294,6 +293,63 @@ namespace VagabondRL
             }
 
         } // VisionSystem
+
+        public static void GuardVisionSystem(Group group, Entity tilemap)
+        {
+            ref var tilemapComponent = ref tilemap.GetComponent<TilemapComponent>();
+
+            for (var i = 0; i < tilemapComponent.GuardsVisible.Length; i++)
+                tilemapComponent.GuardsVisible[i] = -1;
+
+            foreach (var entity in group.Entities)
+            {
+                ref var vision = ref entity.GetComponent<VisionComponent>();
+                ref var transform = ref entity.GetComponent<TransformComponent>();
+
+                var entityTile = GetEntityTile(entity);
+                var pointCount = 200;
+
+                for (var i = 0f; i < 2 * MathF.PI; i += 2 * MathF.PI / pointCount)
+                {
+                    var targetTile = new Vector2I(MathF.Cos(i) * vision.Range + entityTile.X, MathF.Sin(i) * vision.Range + entityTile.Y);
+
+                    var lineTiles = Bresenham.GetLinePoints(entityTile, targetTile);
+                    var blocked = false;
+
+                    lineTiles.Sort((t1, t2) => Vector2I.GetDistance(entityTile, t1).CompareTo(Vector2I.GetDistance(entityTile, t2)));
+
+                    _visionList.Clear();
+
+                    foreach (var tile in lineTiles)
+                    {
+                        // check if tile is out of bounds
+                        if (tile.X < 0 || tile.X >= tilemapComponent.Width
+                            || tile.Y < 0 || tile.Y >= tilemapComponent.Height)
+                        {
+                            continue;
+                        }
+
+                        if (blocked)
+                            continue;
+
+                        _visionList.Add(tile);
+
+                        var index = tile.X + tilemapComponent.Width * tile.Y;
+                        if (tilemapComponent.Collisions[index] == CollisionType.Blocked)
+                            blocked = true;
+                    }
+
+                    foreach (var tile in _visionList)
+                    {
+                        var index = tile.X + tilemapComponent.Width * tile.Y;
+
+                        if (tilemapComponent.Collisions[index] != CollisionType.Blocked)
+                            tilemapComponent.GuardsVisible[index] = entity.ID;
+                    }
+                }
+            }
+
+        } // GuardVisionSystem
 
     } // GeneralSystems
 }
