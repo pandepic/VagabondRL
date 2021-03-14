@@ -24,10 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Mods\Base\Audio\SerfsUp.wav" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\ElementEngine\ElementEngine.csproj" />
   </ItemGroup>
 
