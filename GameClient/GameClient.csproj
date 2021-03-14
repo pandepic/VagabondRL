@@ -4,7 +4,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <AssemblyName>7DRL2021</AssemblyName>
+    <AssemblyName>VagabondRL</AssemblyName>
     <PublishReadyToRun>false</PublishReadyToRun>
     <TieredCompilation>false</TieredCompilation>
 
@@ -24,6 +24,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Mods\Base\Audio\SerfsUp.wav" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\ElementEngine\ElementEngine.csproj" />
   </ItemGroup>
 
@@ -34,6 +38,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="NetCoreAudio" Version="1.6.3" />
     <PackageReference Include="nulastudio.NetCoreBeauty" Version="1.2.9" />
   </ItemGroup>
 
