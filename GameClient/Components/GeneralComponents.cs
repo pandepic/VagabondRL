@@ -16,6 +16,9 @@ namespace VagabondRL
         Left,
         Right
     }
+
+    public struct LootComponent { }
+
     public struct FourDirectionComponent
     {
         public FacingType Facing;

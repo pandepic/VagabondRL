@@ -1,5 +1,6 @@
 using ElementEngine;
 using ElementEngine.ECS;
+using SharpNeat.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,37 +10,20 @@ using System.Threading.Tasks;
 
 namespace VagabondRL
 {
-    public enum TileType
-    {
-        Player = 25,
-        Guard = 28,
-
-        // terrain
-        Grass = 7,
-        Tree = 68,
-        LongGrass = 64,
-        Flowers = 208,
-        RoungBush = 180,
-        TriangleBush = 179,
-
-        // building
-        Wall = 554,
-        Window = 555,
-        DoorClosed = 363,
-        DoorOpen = 364,
-    }
-
     public enum LayerType
     {
         Terrain = 0,
-        Guard = 1,
-        Player = 2,
+        Loot,
+        Guard,
+        Player,
     }
 
     public class EntityBuilder
     {
         public static readonly Vector2I SpriteFrameSize = new Vector2I(16, 32);
         public Registry Registry;
+
+        private FastRandom _rng = new FastRandom();
 
         public EntityBuilder(Registry registry)
         {
@@ -80,7 +64,8 @@ namespace VagabondRL
             player.TryAddComponent(new ColliderComponent());
 
             return player;
-        }
+
+        } // CreatePlayer
 
         public Entity CreateGuard(Vector2I position)
         {
@@ -123,6 +108,27 @@ namespace VagabondRL
             });
 
             return guard;
+        } // CreateGuard
+
+        public Entity CreateLoot(Vector2I position)
+        {
+            var loot = Registry.CreateEntity();
+            loot.TryAddComponent(new LootComponent());
+            loot.TryAddComponent(new DrawableComponent()
+            {
+                AtlasRect = new Rectangle(MapGenerator.TileSize.X * _rng.Next(0, 3), 0, MapGenerator.TileSize.X, MapGenerator.TileSize.Y),
+                Texture = AssetManager.LoadTexture2D("EnvironmentObjects.png"),
+                Layer = (int)LayerType.Loot,
+                Scale = new Vector2(1f),
+                IsVisible = true,
+            });
+            loot.TryAddComponent(new TransformComponent()
+            {
+                Position = position,
+            });
+            
+            return loot;
         }
-    }
+
+    } // EntityBuilder
 }

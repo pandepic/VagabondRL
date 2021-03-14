@@ -109,6 +109,7 @@ namespace VagabondRL
             foreach (var guardSpawn in tilemapComponent.GuardSpawns)
             {
                 EntityBuilder.CreateGuard(guardSpawn + SpawnOffset);
+                EntityBuilder.CreateLoot(guardSpawn + SpawnOffset);
             }
         }
 
