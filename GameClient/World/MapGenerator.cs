@@ -264,14 +264,6 @@ namespace VagabondRL
             foreach (var room in rooms)
             {
                 var doorX = _rng.Next(room.Position.X + 3, room.Rect.Right - 3);
-                var doorY = _rng.Next(0, 10) >= 5 ? room.Position.Y : room.Rect.Bottom - 1;
-
-                if (room.Position.Y == 0)
-                    doorY = room.Rect.Bottom - 1;
-                else if (room.Rect.Bottom >= mapSize.Y)
-                    doorY = room.Position.Y;
-
-                var door = new Vector2I(doorX, doorY);
 
                 for (var y = room.Position.Y; y < room.Rect.Bottom; y++)
                 {
@@ -280,7 +272,7 @@ namespace VagabondRL
                         if ((x == room.Position.X || x == room.Rect.Right - 1)
                             || (y == room.Position.Y || y == room.Rect.Bottom - 1))
                         {
-                            if ((x != door.X && x != door.X + 1) || y != door.Y)
+                            if (x != doorX && x != doorX + 1)
                             {
                                 var index = x + mapSize.X * y;
                                 tilemapComponent.Collisions[index] = CollisionType.Blocked;
