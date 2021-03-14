@@ -72,7 +72,7 @@ namespace VagabondRL
         };
 
         public static readonly Vector2I TileSize = new Vector2I(16);
-        public static readonly Vector2I RoomPadding = new Vector2I(4);
+        public static readonly Vector2I RoomPadding = new Vector2I(8);
 
         private FastRandom _rng = new FastRandom();
         public Entity Tilemap;
@@ -174,7 +174,7 @@ namespace VagabondRL
                             collidedX = true;
                     }
 
-                    if (room.Position.X < 0)
+                    if (room.PaddedRect.Location.X < 0)
                         collidedX = true;
 
                     if (collidedX)
@@ -197,7 +197,7 @@ namespace VagabondRL
                             collidedY = true;
                     }
 
-                    if (room.Position.Y < 0)
+                    if (room.PaddedRect.Location.Y < 0)
                         collidedY = true;
 
                     if (collidedY)
@@ -213,6 +213,8 @@ namespace VagabondRL
                 if (room.Rect.Bottom > mapSize.Y)
                     mapSize.Y = room.Rect.Bottom;
             }
+
+            mapSize += RoomPadding / 2;
 
             tilemapComponent.Width = mapSize.X;
             tilemapComponent.Height = mapSize.Y;
@@ -296,6 +298,7 @@ namespace VagabondRL
 
                 var index = x + mapSize.X * y;
                 tilemapComponent.Layers[0].Tiles[index] = 1;
+                tilemapComponent.Collisions[index] = CollisionType.Blocked;
             }
 
             // left wall
@@ -305,6 +308,7 @@ namespace VagabondRL
 
                 var index = x + mapSize.X * y;
                 tilemapComponent.Layers[0].Tiles[index] = 1;
+                tilemapComponent.Collisions[index] = CollisionType.Blocked;
             }
 
             // right wall
@@ -314,6 +318,7 @@ namespace VagabondRL
 
                 var index = x + mapSize.X * y;
                 tilemapComponent.Layers[0].Tiles[index] = 1;
+                tilemapComponent.Collisions[index] = CollisionType.Blocked;
             }
 
             // bottom wall
@@ -323,6 +328,7 @@ namespace VagabondRL
 
                 var index = x + mapSize.X * y;
                 tilemapComponent.Layers[0].Tiles[index] = 1;
+                tilemapComponent.Collisions[index] = CollisionType.Blocked;
             }
 
 
