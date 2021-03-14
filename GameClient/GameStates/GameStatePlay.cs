@@ -17,6 +17,7 @@ namespace VagabondRL
     {
         public Game Game;
         public SpriteBatch2D SpriteBatch;
+        public SpriteFont Font;
         public Camera2D Camera;
 
         public PrimitiveBatch PrimitiveBatch = new PrimitiveBatch();
@@ -37,7 +38,8 @@ namespace VagabondRL
         public Texture2D TileAtlas;
         public bool ShowDebug;
         public List<AStarPathResult> TestPathingList = new List<AStarPathResult>();
-        public static int GuardCount;
+
+        public int LootCount;
 
         // AI
         public MapGenerator MapGenerator;
@@ -68,6 +70,15 @@ namespace VagabondRL
             Camera = new Camera2D(new Rectangle(0, 0, Game.Window.Width, Game.Window.Height));
             Camera.Zoom = 2;
 
+            Font = AssetManager.LoadSpriteFont("LatoBlack.ttf");
+        }
+
+        public override void Initialize()
+        {
+        }
+
+        public override void Load()
+        {
             Registry = new Registry();
             DrawableGroup = Registry.RegisterGroup<TransformComponent, DrawableComponent>();
             MovementGroup = Registry.RegisterGroup<TransformComponent, MovementComponent, GuardComponent>();
@@ -83,21 +94,11 @@ namespace VagabondRL
             {
             });
 
-            GuardCount = 1;
             TileAtlas = AssetManager.LoadTexture2D("Environment.png");
             EntityBuilder = new EntityBuilder(Registry);
-        }
-
-        public override void Initialize()
-        {
-        }
-
-        public override void Load()
-        {
-            GuardCount += 1;
 
             MapGenerator = new MapGenerator(Tilemap);
-            MapGenerator.GenerateMap(GuardCount);
+            MapGenerator.GenerateMap(Globals.CurrentLevel + 1);
 
             ref var tilemapComponent = ref Tilemap.GetComponent<TilemapComponent>();
 
@@ -113,11 +114,12 @@ namespace VagabondRL
                 EntityBuilder.CreateGuard(guardSpawn + SpawnOffset);
                 EntityBuilder.CreateLoot(guardSpawn + SpawnOffset);
             }
+
+            LootCount = LootGroup.Entities.Length;
         }
 
         public override void Unload()
         {
-            Registry.Clear();
         }
 
         public override void Update(GameTimer gameTimer)
@@ -138,6 +140,15 @@ namespace VagabondRL
             Registry.SystemsFinished();
 
             Camera.Center(Player.GetComponent<TransformComponent>().TransformedPosition.ToVector2I());
+
+            if (LootGroup.Entities.Length == 0)
+            {
+                Globals.CurrentLevel += 1;
+                Game.SetGameState(GameStateType.NextLevel);
+            }
+
+            if (GeneralSystems.GameOverSystem(GuardGroup, Player))
+                Game.SetGameState(GameStateType.GameOver);
 
         } // Update
 
@@ -232,6 +243,7 @@ namespace VagabondRL
 
             // screen space (UI)
             SpriteBatch.Begin(SamplerType.Point);
+            SpriteBatch.DrawText(Font, $"Loot found { LootCount - LootGroup.Entities.Length }/{ LootCount }", new Vector2(25), RgbaByte.White, 40);
             SpriteBatch.End();
         } // Draw
 

@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Menu>
+  <Frame Name="MainFrame">
+    <Position X="center" Y="0" />
+    <Size Width="fill" Height="fill" />
+
+    <LayoutGroup Name="MenuButtonLayout" Direction="Vertical" Spacing="5">
+      <StartPosition X="center" Y="center" />
+    </LayoutGroup>
+
+    <Widgets>
+      <Label Name="lblTitle" Outline="1">
+        <FontName>LatoBlack.ttf</FontName>
+        <FontSize>60</FontSize>
+        <Color>#FFFFFF</Color>
+        <Text></Text>
+        <Position X="center" Y="75" />
+      </Label>
+
+      <Button Name="btnStartLevel" Template="StandardButton" LayoutGroup="MenuButtonLayout">
+        <Label Text="START LEVEL" />
+        <Position X="center" Y="0" />
+      </Button>
+      
+      <Button Name="btnExit" Template="StandardButton" LayoutGroup="MenuButtonLayout">
+        <Label Text="EXIT" />
+        <Position X="center" Y="0" />
+      </Button>
+
+    </Widgets>
+
+  </Frame>
+</Menu>

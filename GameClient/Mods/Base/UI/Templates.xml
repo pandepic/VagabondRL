@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Templates>
+  <Template TemplateName="StandardButton">
+    <Label>
+      <FontName>LatoBlack.ttf</FontName>
+      <FontSize>24</FontSize>
+      <Position X="center" Y="center" />
+      <Color>#ffffff</Color>
+    </Label>
+    <Button UISpriteType="Static">menu_button.png</Button>
+    <ButtonPressed UISpriteType="Static">menu_button.png</ButtonPressed>
+    <ButtonHover UISpriteType="Static">menu_button.png</ButtonHover>
+    <ButtonDisabled UISpriteType="Static">menu_button.png</ButtonDisabled>
+  </Template>
+</Templates>

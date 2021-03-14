@@ -9,9 +9,9 @@ namespace VagabondRL
 {
     public enum GameStateType
     {
-        Menu,
+        NextLevel,
         Play,
-        Settings,
+        GameOver,
     }
 
     public class Game : BaseGame
@@ -42,8 +42,11 @@ namespace VagabondRL
             ClearColor = Veldrid.RgbaFloat.Black;
             Window.Resizable = false;
 
+            GameStates.Add(GameStateType.NextLevel, new GameStateNextLevel(this));
             GameStates.Add(GameStateType.Play, new GameStatePlay(this));
-            SetGameState(GameStateType.Play);
+            GameStates.Add(GameStateType.GameOver, new GameStateGameOver(this));
+
+            SetGameState(GameStateType.NextLevel);
         }
 
         public override void Update(GameTimer gameTimer)

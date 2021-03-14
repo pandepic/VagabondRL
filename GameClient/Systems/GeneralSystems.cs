@@ -359,5 +359,22 @@ namespace VagabondRL
             }
         } // LootSystem
 
+        public static bool GameOverSystem(Group group, Entity player)
+        {
+            foreach (var entity in group.Entities)
+            {
+                ref var guardTransform = ref entity.GetComponent<TransformComponent>();
+                ref var playerTransform = ref player.GetComponent<TransformComponent>();
+
+                var guardRect = new Rectangle(guardTransform.Position.ToVector2I(), new Vector2I(MapGenerator.TileSize.X, MapGenerator.TileSize.Y * 2));
+                var playerRect = new Rectangle(playerTransform.Position.ToVector2I(), new Vector2I(MapGenerator.TileSize.X, MapGenerator.TileSize.Y * 2));
+
+                if (guardRect.Intersects(playerRect))
+                    return true;
+            }
+
+            return false;
+        } // GameOverSystem
+
     } // GeneralSystems
 }
