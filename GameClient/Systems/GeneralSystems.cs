@@ -192,7 +192,37 @@ namespace VagabondRL
 
         private static List<Vector2I> _visionList = new List<Vector2I>();
 
-        public static void VisionSystem(Entity player, Entity tilemap, Group guards)
+        private static bool CanPlayerSeeEntity(Entity player, Entity entity, VisionComponent vision, TilemapComponent tilemapComponent)
+        {
+            var playerTile = GetEntityTile(player);
+            var entityTile = GetEntityTile(entity);
+
+            if (Vector2I.GetDistance(playerTile, entityTile) > vision.Range)
+                return false;
+
+            var lineTiles = Bresenham.GetLinePoints(playerTile, entityTile);
+            lineTiles.Sort((t1, t2) => Vector2I.GetDistance(playerTile, t1).CompareTo(Vector2I.GetDistance(playerTile, t2)));
+
+            var blocked = false;
+
+            foreach (var tile in lineTiles)
+            {
+                // check if tile is out of bounds
+                if (tile.X < 0 || tile.X >= tilemapComponent.Width
+                    || tile.Y < 0 || tile.Y >= tilemapComponent.Height)
+                {
+                    continue;
+                }
+
+                var index = tile.X + tilemapComponent.Width * tile.Y;
+                if (tilemapComponent.Collisions[index] == CollisionType.Blocked)
+                    blocked = true;
+            }
+
+            return !blocked;
+        } // CanPlayerSeeEntity
+
+        public static void VisionSystem(Entity player, Entity tilemap, Group guards, Group loot)
         {
             ref var vision = ref player.GetComponent<VisionComponent>();
             ref var transform = ref player.GetComponent<TransformComponent>();
@@ -202,36 +232,14 @@ namespace VagabondRL
 
             foreach (var guard in guards.Entities)
             {
-                ref var guardTransform = ref guard.GetComponent<TransformComponent>();
                 ref var guardDrawable = ref guard.GetComponent<DrawableComponent>();
+                guardDrawable.IsVisible = CanPlayerSeeEntity(player, guard, vision, tilemapComponent);
+            }
 
-                guardDrawable.IsVisible = false;
-
-                var guardTile = GetEntityTile(guard);
-
-                if (Vector2I.GetDistance(playerTile, guardTile) > vision.Range)
-                    continue;
-
-                var lineTiles = Bresenham.GetLinePoints(playerTile, guardTile);
-                lineTiles.Sort((t1, t2) => Vector2I.GetDistance(playerTile, t1).CompareTo(Vector2I.GetDistance(playerTile, t2)));
-
-                var blocked = false;
-
-                foreach (var tile in lineTiles)
-                {
-                    // check if tile is out of bounds
-                    if (tile.X < 0 || tile.X >= tilemapComponent.Width
-                        || tile.Y < 0 || tile.Y >= tilemapComponent.Height)
-                    {
-                        continue;
-                    }
-
-                    var index = tile.X + tilemapComponent.Width * tile.Y;
-                    if (tilemapComponent.Collisions[index] == CollisionType.Blocked)
-                        blocked = true;
-                }
-
-                guardDrawable.IsVisible = !blocked;
+            foreach (var lootEntity in loot.Entities)
+            {
+                ref var lootDrawable = ref lootEntity.GetComponent<DrawableComponent>();
+                lootDrawable.IsVisible = CanPlayerSeeEntity(player, lootEntity, vision, tilemapComponent);
             }
 
             for (var i = 0; i < tilemapComponent.Visible.Length; i++)
@@ -335,6 +343,21 @@ namespace VagabondRL
             }
 
         } // GuardVisionSystem
+
+        public static void LootSystem(Registry registry, Group group, Entity player)
+        {
+            foreach (var entity in group.Entities)
+            {
+                ref var lootTransform = ref entity.GetComponent<TransformComponent>();
+                ref var playerTransform = ref player.GetComponent<TransformComponent>();
+
+                var lootRect = new Rectangle(lootTransform.Position.ToVector2I(), MapGenerator.TileSize);
+                var playerRect = new Rectangle(playerTransform.Position.ToVector2I(), new Vector2I(MapGenerator.TileSize.X, MapGenerator.TileSize.Y * 2));
+
+                if (lootRect.Intersects(playerRect))
+                    registry.DestroyEntity(entity);
+            }
+        } // LootSystem
 
     } // GeneralSystems
 }

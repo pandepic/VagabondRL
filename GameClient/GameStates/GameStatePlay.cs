@@ -53,6 +53,7 @@ namespace VagabondRL
         public Group FourDirectionSpriteGroup;  // entities which are drawn with a 4-direction-type sprite
         public Group GuardGroup;
         public Group GuardVisibleGroup;
+        public Group LootGroup;
 
         // Entities
         public EntityBuilder EntityBuilder;
@@ -75,6 +76,7 @@ namespace VagabondRL
             FourDirectionSpriteGroup = Registry.RegisterGroup<FourDirectionComponent, PhysicsComponent, DrawableComponent>();
             GuardVisibleGroup = Registry.RegisterGroup<GuardComponent, TransformComponent, DrawableComponent>();
             GuardGroup = Registry.RegisterGroup<GuardComponent, MovementComponent>();
+            LootGroup = Registry.RegisterGroup<LootComponent>();
 
             Tilemap = Registry.CreateEntity();
             Tilemap.TryAddComponent(new TilemapComponent()
@@ -127,9 +129,10 @@ namespace VagabondRL
             AISystems.MovementSystem(MovementGroup, gameTimer);
 
             GeneralSystems.PhysicsSystem(PhysicsGroup, gameTimer, Tilemap);
-            GeneralSystems.VisionSystem(Player, Tilemap, GuardVisibleGroup);
+            GeneralSystems.VisionSystem(Player, Tilemap, GuardVisibleGroup, LootGroup);
             GeneralSystems.GuardVisionSystem(GuardGroup, Tilemap);
             GeneralSystems.FourDirectionSystem(FourDirectionSpriteGroup, gameTimer);
+            GeneralSystems.LootSystem(Registry, LootGroup, Player);
 
             // process queues for removing entities and components etc.
             Registry.SystemsFinished();
@@ -167,7 +170,7 @@ namespace VagabondRL
                     if (tilemapComponent.Visible[index])
                     {
                         if (tilemapComponent.GuardsVisible[index] > -1)
-                            tintColor = new RgbaFloat(0f, 1f, 0f, 0.8f);
+                            tintColor = new RgbaFloat(1f, 1f, 0f, 0.8f);
                         else
                             tintColor = RgbaFloat.White;
                     }
