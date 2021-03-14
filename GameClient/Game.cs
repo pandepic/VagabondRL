@@ -48,10 +48,7 @@ namespace VagabondRL
 
             SetGameState(GameStateType.NextLevel);
 
-            var songPath = AssetManager.GetAssetPath("SerfsUp.wav");
-
-            var audioPlayer = new NetCoreAudio.Player();
-            audioPlayer.Play(songPath);
+            SoundManager.Play(AssetManager.LoadAudioSourceByExtension("SerfsUp.ogg"), 0);
         }
 
         public override void Update(GameTimer gameTimer)
