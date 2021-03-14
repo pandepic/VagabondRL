@@ -237,29 +237,6 @@ namespace VagabondRL
 
             switch (controlName)
             {
-                //case "PassTurn":
-                //    if (state == GameControlState.Released)
-                //    {
-                //        MapGenerator.GenerateMap();
-                //    }
-                //    break;
-
-                //case "DragCamera":
-                //    if (state == GameControlState.Pressed)
-                //    {
-                //        if (!_dragging)
-                //        {
-                //            _dragging = true;
-                //            _dragMousePosition = mousePosition;
-                //        }
-                //    }
-                //    else if (state == GameControlState.Released)
-                //    {
-                //        if (_dragging)
-                //            _dragging = false;
-                //    }
-                //    break;
-
                 case "ZoomIn":
                     if (state == GameControlState.Released || state == GameControlState.WheelUp)
                     {
@@ -301,29 +278,6 @@ namespace VagabondRL
 
                 _dragMousePosition = mousePosition;
             }
-        }
-
-        public override void HandleMouseButtonReleased(Vector2 mousePosition, MouseButton button, GameTimer gameTimer)
-        {
-            //if (button == MouseButton.Right)
-            //{
-            //    var mouseWorldPos = Camera.ScreenToWorld(InputManager.MousePosition);
-            //    var mouseTile = mouseWorldPos.ToVector2I() / MapGenerator.TileSize;
-            //    ref var transform = ref Player.GetComponent<TransformComponent>();
-            //    var playerTile = transform.TransformedPosition.ToVector2I() / MapGenerator.TileSize;
-
-            //    var result = Pathfinder.GetPath(playerTile, mouseTile, out var path);
-            //    if (path != null)
-            //        Console.WriteLine(path.Count);
-
-            //    Console.WriteLine(playerTile.ToString() + " - " + mouseTile.ToString() + " - " + result.ToString());
-
-            //    if (result == AStarPathResultType.Success)
-            //    {
-            //        TestPathingList.Clear();
-            //        TestPathingList.AddRange(path);
-            //    }
-            //}
         }
 
     } // GameStatePlay
