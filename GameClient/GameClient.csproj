@@ -24,14 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Mods\Base\LatoBlack.ttf" />
-    <None Remove="Mods\Base\UI\GameOverMenu.xml" />
-    <None Remove="Mods\Base\UI\menu_button.png" />
-    <None Remove="Mods\Base\UI\NextLevelMenu.xml" />
-    <None Remove="Mods\Base\UI\Templates.xml" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\ElementEngine\ElementEngine.csproj" />
   </ItemGroup>
 
