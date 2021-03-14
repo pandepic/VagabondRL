@@ -127,7 +127,8 @@ namespace VagabondRL
             // Player
             PlayerSystems.ControllerMovementSystem(Player);
 
-            AISystems.PathingSystem(PathingGroup, Pathfinder, Tilemap);
+            AISystems.GuardBehaviourSystem(GuardGroup, Player, Tilemap);
+            AISystems.PathingSystem(PathingGroup, Pathfinder, Tilemap, Player);
             AISystems.MovementSystem(MovementGroup, gameTimer);
 
             GeneralSystems.PhysicsSystem(PhysicsGroup, gameTimer, Tilemap);

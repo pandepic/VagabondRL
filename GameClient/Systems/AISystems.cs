@@ -14,7 +14,35 @@ namespace VagabondRL
     {
         private static FastRandom _rng = new FastRandom();
 
-        public static void PathingSystem(Group group, AStarPathfinder pathfinder, Entity tilemap)
+        public static void GuardBehaviourSystem(Group group, Entity player, Entity tilemap)
+        {
+            ref var tilemapComponent = ref tilemap.GetComponent<TilemapComponent>();
+            ref var playerTransform = ref player.GetComponent<TransformComponent>();
+
+            foreach (var entity in group.Entities)
+            {
+                ref var guard = ref entity.GetComponent<GuardComponent>();
+                guard.State = GuardStateType.Patrol;
+            }
+
+            var playerTile = GeneralSystems.GetEntityTile(player);
+            var index = playerTile.X + tilemapComponent.Width * playerTile.Y;
+
+            if (tilemapComponent.GuardsVisible[index] > -1)
+            {
+                foreach (var entity in group.Entities)
+                {
+                    ref var guard = ref entity.GetComponent<GuardComponent>();
+                    ref var movement = ref entity.GetComponent<MovementComponent>();
+                    guard.State = GuardStateType.Chase;
+                    movement.Destination = Vector2.Zero;
+                    movement.MovementPath.Clear();
+                    movement.NextPoint = Vector2.Zero;
+                }
+            }
+        } // GuardBehaviourSystem
+
+        public static void PathingSystem(Group group, AStarPathfinder pathfinder, Entity tilemap, Entity player)
         {
             ref var tilemapComponent = ref tilemap.GetComponent<TilemapComponent>();
 
@@ -39,6 +67,20 @@ namespace VagabondRL
                         if (result == AStarPathResultType.Success)
                         {
                             movement.Destination = patrolDestination;
+
+                            foreach (var resultTile in path)
+                                movement.MovementPath.Add(resultTile.Position * MapGenerator.TileSize);
+                        }
+                    }
+                    else if (guard.State == GuardStateType.Chase)
+                    {
+                        var playerTile = GeneralSystems.GetEntityTile(player);
+
+                        var result = pathfinder.GetPath(entityTile, playerTile, out var path);
+
+                        if (result == AStarPathResultType.Success)
+                        {
+                            movement.Destination = playerTile * MapGenerator.TileSize;
 
                             foreach (var resultTile in path)
                                 movement.MovementPath.Add(resultTile.Position * MapGenerator.TileSize);
