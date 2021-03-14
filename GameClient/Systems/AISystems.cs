@@ -14,30 +14,6 @@ namespace VagabondRL
     {
         private static FastRandom _rng = new FastRandom();
 
-        public static void GuardAISystem(Group group, Entity player)
-        {
-            ref var playerTransform = ref player.GetComponent<TransformComponent>();
-
-        public static void GuardAISystem(Group group, Entity player, GameTimer gameTimer)
-        {
-            AITimer += gameTimer.DeltaMS;
-            if (AITimer > AIUpdateRate)
-            {
-                AITimer -= AIUpdateRate;
-
-                ref var playerTransform = ref player.GetComponent<TransformComponent>();
-
-                foreach (var entity in group.Entities)
-                {
-                    ref var movement = ref entity.GetComponent<MovementComponent>();
-
-                    movement.Destination = playerTransform.Position;
-                }
-            }
-
-
-        }
-
         public static void PathingSystem(Group group, AStarPathfinder pathfinder, Entity tilemap)
         {
             ref var tilemapComponent = ref tilemap.GetComponent<TilemapComponent>();
@@ -68,22 +44,9 @@ namespace VagabondRL
                                 movement.MovementPath.Add(resultTile.Position * MapGenerator.TileSize);
                         }
                     }
-
-                    //// Populate movement component with new path
-                    //List<AStarPathResult> Path = new List<AStarPathResult>();
-                    //Vector2 TilePosition = transform.Position / 16;
-                    //Vector2 DestinationTilePosition = movement.Destination / 16;
-
-                    //AStarPathResultType Result =
-                    //    pathfinder.GetPath(TilePosition, DestinationTilePosition, out Path);
-
-                    //if (Result == AStarPathResultType.Success)
-                    //    foreach (AStarPathResult result in Path)
-                    //        movement.MovementPath.Add(result.Position * 16);
                 }
-
             }
-        }
+        } // PathingSystem
 
         public static void MovementSystem(Group group, GameTimer gameTimer)
         {
@@ -127,36 +90,10 @@ namespace VagabondRL
                             direction.Y = 1;
 
                         physics.Velocity = direction * physics.Speed;
-
-                        //var movementVector = movement.NextPoint - (transform.Position + positionOffset);
-                        //physics.Velocity = Vector2.Normalize(movementVector) * physics.Speed;
                     }
                 }
             }
         } // MovementSystem
 
-        public static void GuardSenseSystem(Group group)
-        {
-            foreach (var entity in group.Entities)
-            {
-            }
-        }
-
-        //public static void AreaSoundSystem(AreaSoundsManager areaSoundsManager, GameTimer gameTimer)
-        //{
-        //    foreach (AreaSound sound in areaSoundsManager.Sounds)
-        //    {
-        //        sound.SoundTimer.Update(gameTimer);
-        //        if (sound.SoundTimer.TicThisUpdate)
-        //        {
-        //            sound.Level -= 1;
-
-        //            if (sound.Level == 0)
-        //            {
-        //                areaSoundsManager.Sounds.Remove(sound);
-        //            }
-        //        }
-        //    }
-        //}
-    }
+    } // AISystems
 }
