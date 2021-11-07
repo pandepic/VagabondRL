@@ -66,10 +66,10 @@ namespace VagabondRL
 
                         if (result == AStarPathResultType.Success)
                         {
-                            movement.Destination = patrolDestination;
+                            movement.Destination = patrolDestination.ToVector2();
 
                             foreach (var resultTile in path)
-                                movement.MovementPath.Add(resultTile.Position * MapGenerator.TileSize);
+                                movement.MovementPath.Add((resultTile.Position * MapGenerator.TileSize).ToVector2());
                         }
                     }
                     else if (guard.State == GuardStateType.Chase)
@@ -80,10 +80,10 @@ namespace VagabondRL
 
                         if (result == AStarPathResultType.Success)
                         {
-                            movement.Destination = playerTile * MapGenerator.TileSize;
+                            movement.Destination = (playerTile * MapGenerator.TileSize).ToVector2();
 
                             if (path.Count > 0)
-                                movement.MovementPath.Add(path[0].Position * MapGenerator.TileSize);
+                                movement.MovementPath.Add((path[0].Position * MapGenerator.TileSize).ToVector2());
                         }
                     }
                 }

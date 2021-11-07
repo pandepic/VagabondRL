@@ -1,4 +1,5 @@
 ﻿using ElementEngine;
+using ElementEngine.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,7 +55,7 @@ namespace VagabondRL
             switch (widget.Name)
             {
                 case "btnRestart":
-                    if (type == UIEventType.ButtonClick)
+                    if (type == UIEventType.OnMouseClicked)
                     {
                         Globals.CurrentLevel = 1;
                         Game.SetGameState(GameStateType.NextLevel);
@@ -62,7 +63,7 @@ namespace VagabondRL
                     break;
 
                 case "btnExit":
-                    if (type == UIEventType.ButtonClick)
+                    if (type == UIEventType.OnMouseClicked)
                         Game.Quit();
                     break;
             }

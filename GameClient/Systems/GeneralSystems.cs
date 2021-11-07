@@ -2,6 +2,7 @@
 using ElementEngine.ECS;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -38,15 +39,14 @@ namespace VagabondRL
                 if (!drawable.IsVisible)
                     continue;
 
-                Vector2I Pos = transform.TransformedPosition - drawable.Origin;
-                Vector2I Size = drawable.AtlasRect.Size;
-                var entityRect = new Rectangle(Pos, Size);
+                var pos = (transform.TransformedPosition - drawable.Origin).ToVector2I();
+                var entityRect = new Rectangle(pos, drawable.AtlasRect.Size);
 
                 if (entityRect.Intersects(cameraView))
                 {
                     _drawList.Add(new DrawItem()
                     {
-                        Position = transform.TransformedPosition.ToVector2I(),
+                        Position = transform.TransformedPosition.ToVector2I().ToVector2(),
                         Origin = drawable.Origin,
                         Scale = drawable.Scale,
                         Rotation = transform.Rotation,

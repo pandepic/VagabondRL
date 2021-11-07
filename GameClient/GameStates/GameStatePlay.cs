@@ -107,7 +107,7 @@ namespace VagabondRL
             Player = EntityBuilder.CreatePlayer(new Vector2I());
 
             ref var playerTransform = ref Player.GetComponent<TransformComponent>();
-            playerTransform.Position = tilemapComponent.PlayerSpawn + SpawnOffset;
+            playerTransform.Position = (tilemapComponent.PlayerSpawn + SpawnOffset).ToVector2();
 
             foreach (var guardSpawn in tilemapComponent.GuardSpawns)
             {

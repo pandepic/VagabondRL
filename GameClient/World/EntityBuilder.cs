@@ -36,7 +36,7 @@ namespace VagabondRL
             player.TryAddComponent(new PlayerComponent());
             player.TryAddComponent(new TransformComponent()
             {
-                Position = position,
+                Position = position.ToVector2(),
             });
             player.TryAddComponent(new DrawableComponent()
             {
@@ -76,7 +76,7 @@ namespace VagabondRL
             });
             guard.TryAddComponent(new TransformComponent()
             {
-                Position = position,
+                Position = position.ToVector2(),
             });
             guard.TryAddComponent(new DrawableComponent()
             {
@@ -124,7 +124,7 @@ namespace VagabondRL
             });
             loot.TryAddComponent(new TransformComponent()
             {
-                Position = position,
+                Position = position.ToVector2(),
             });
             
             return loot;
